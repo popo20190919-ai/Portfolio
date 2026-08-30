@@ -69,38 +69,35 @@ const rig=new THREE.Group();scene.add(rig);
 const stemMat=new THREE.MeshStandardMaterial({color:0x1f7a35,roughness:.82,metalness:0}),
 stemDarkMat=new THREE.MeshStandardMaterial({color:0x125c25,roughness:.9,metalness:0}),
 petioleMat=new THREE.MeshStandardMaterial({color:0x2f8f47,roughness:.8,metalness:0}),
+grayMat=new THREE.MeshStandardMaterial({color:0xd2d4d6,roughness:.7,metalness:.1}),
 leafEdgeMat=new THREE.MeshStandardMaterial({color:0x12632c,roughness:.85,metalness:0}),
 leafMat=new THREE.MeshStandardMaterial({color:0x0e4a1d,roughness:.92,metalness:0}),
 berryMat=new THREE.MeshStandardMaterial({color:0xff3b30,roughness:.45,metalness:.05});
 
 const stemCurve=new THREE.CatmullRomCurve3([
  new THREE.Vector3(0,-4.9,0),
- new THREE.Vector3(0.14,-2.4,0.06),
- new THREE.Vector3(-0.12,0.2,-0.02),
- new THREE.Vector3(0.12,2.7,-0.06),
- new THREE.Vector3(-0.05,5.15,0.02)
+ new THREE.Vector3(0.07,-2.4,0.04),
+ new THREE.Vector3(-0.05,0.2,-0.02),
+ new THREE.Vector3(0.06,2.7,-0.04),
+ new THREE.Vector3(-0.03,5.15,0.02)
 ]);
 rig.add(new THREE.Mesh(new THREE.TubeGeometry(stemCurve,90,.105,14,false),stemMat));
-function budLeaf(){const s=new THREE.Shape();s.moveTo(0,0);s.quadraticCurveTo(.15,.12,.13,.32);s.quadraticCurveTo(.07,.44,0,.48);s.quadraticCurveTo(-.07,.44,-.13,.32);s.quadraticCurveTo(-.15,.12,0,0);return new THREE.Mesh(new THREE.ShapeGeometry(s,14),stemDarkMat)}
-for(let i=0;i<11;i++){const t=.06+i*.088,p=stemCurve.getPoint(t),side=i%2?1:-1;
- const th=new THREE.Mesh(new THREE.ConeGeometry(.05,.26,6),stemDarkMat);
- th.position.copy(p).add(new THREE.Vector3(side*.13,.02,0));
- th.rotation.z=side*(Math.PI/2-.5);th.rotation.y=(i%3-1)*.3;rig.add(th)}
-for(let i=0;i<5;i++){const t=.13+i*.19,p=stemCurve.getPoint(t),side=i%2?1:-1;
- const lf=budLeaf();lf.position.copy(p).add(new THREE.Vector3(side*.08,.05,0));
- lf.rotation.z=side>0?-.7:Math.PI+.7;lf.rotation.y=side*.25;rig.add(lf)}
+[[2.78,-1],[1.95,-1],[.85,-1],[-.42,1],[-1.32,-1],[-2.05,1],[-2.82,-1],[-3.62,-1],[3.35,1]].forEach(([y,side])=>{
+ const th=new THREE.Mesh(new THREE.ConeGeometry(.048,.24,5),stemDarkMat);
+ th.position.set(side*.12,y,0);
+ th.rotation.z=side*(Math.PI/2-.4);th.rotation.y=(y%1)*.4;rig.add(th)});
 
 const signs=[
- {shape:'square',y:4.65,side:1,angle:.18,w:1.06,h:1.03,front:'01-top',back:'gray',showFront:true},
- {shape:'wide',y:3.82,side:-1,angle:-.48,w:2.38,h:.85,front:'02-arrow',back:'dark',showFront:false},
- {shape:'wide',y:3.0,side:1,angle:.32,w:2.85,h:1.74,front:'03-orange',back:'dark',showFront:true},
- {shape:'triangle',y:2.0,side:-1,angle:.58,w:2.05,h:1.88,front:'04-green',back:'light',showFront:false,uv:{u0:.0272,u1:.9711,v0:.0315,v1:.9704,pad:.037}},
- {shape:'tall',y:.76,side:1,angle:-.24,w:1.58,h:2.22,front:'05-yellow',back:'light',showFront:true},
- {shape:'square',y:-.48,side:-1,angle:-.72,w:1.95,h:1.91,front:'06-blue',back:'light',showFront:true},
- {shape:'wide',y:-1.62,side:1,angle:.74,w:1.9,h:.67,front:'07-geometry',back:'dark',showFront:false},
- {shape:'circle',y:-2.42,side:1,angle:-.56,w:1.72,h:1.72,front:'08-fire',back:'dark',showFront:true},
- {shape:'octagon',y:-3.18,side:-1,angle:.16,w:.92,h:.92,front:'09-safe',back:'light',showFront:false},
- {shape:'triangle',y:-4.15,side:-1,angle:.38,w:1.28,h:1.17,front:'10-alert',back:'light',showFront:true}
+ {shape:'rounded',y:3.8,side:1,angle:.1,tilt:.02,w:.88,h:.74,k:'cyan',bk:'cyanSolid',len:.25},
+ {shape:'circle',y:3.55,side:-1,angle:.12,w:1.22,h:1.22,k:'greenSolid',bk:'greenSolid',len:.16,bent:true},
+ {shape:'rounded',y:1.95,side:1,angle:.12,tilt:.14,w:1.62,h:1.28,k:'orange',bk:'greenMid',len:.4,berry:[.82,.58]},
+ {shape:'kite',y:.75,side:-1,angle:.14,tilt:-.12,w:2.62,h:2.4,k:'leafKite',bk:'leafCut',len:.12,zoff:-.12},
+ {shape:'tag',y:-.95,side:1,angle:.05,tilt:.08,w:2.55,h:2.2,k:'rabbit',bk:'leaf',len:.12,berry:[1.22,-.1]},
+ {shape:'hex',y:-1.15,side:-1,angle:.2,tilt:.03,w:3.0,h:2.6,k:'blue',bk:'leaf',len:.12,berry:[-1.45,-1.15]},
+ {shape:'tag',y:-3.5,side:1,angle:.4,tilt:-.3,w:1.62,h:1.7,k:'arrowLeaf',bk:'leaf',len:.2,zoff:-.38,showFront:false},
+ {shape:'circle',y:-2.05,side:1,angle:.1,w:1.56,h:1.56,k:'fire',bk:'redStar',len:.5,berry:[.7,-.7],gray:true},
+ {shape:'circle',y:-2.9,side:-1,angle:.1,w:1.26,h:1.26,k:'minus',bk:'greenSolid',len:.12,dark:true},
+ {shape:'kite',y:-3.8,side:1,angle:.12,tilt:-.25,w:1.36,h:1.5,k:'leafKite',bk:'leafKite',len:.08,zoff:.12}
 ];
 
 const details=[
@@ -156,47 +153,65 @@ const details=[
 ];
 
 function rr(w,h,r){const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s}
-function shapeFor(type,w,h,g=0){if(type==='circle'){const s=new THREE.Shape();s.absarc(0,0,w/2+g,0,Math.PI*2);return s}if(type==='triangle'){const s=new THREE.Shape();s.moveTo(0,h/2+g);s.lineTo(w/2+g,-h/2-g);s.quadraticCurveTo(w/2+g+.04,-h/2-g-.07,w/2+g-.08,-h/2-g-.07);s.lineTo(-w/2-g+.08,-h/2-g-.07);s.quadraticCurveTo(-w/2-g-.04,-h/2-g-.07,-w/2-g,-h/2-g);s.closePath();return s}if(type==='octagon'){const s=new THREE.Shape(),R=w/2+g;for(let i=0;i<8;i++){const a=Math.PI/8+i*Math.PI/4,x=Math.cos(a)*R,y=Math.sin(a)*R;i?s.lineTo(x,y):s.moveTo(x,y)}s.closePath();return s}return rr(w+g*2,h+g*2,Math.min(.1+g,.18))}
+function poly(points){const s=new THREE.Shape();points.forEach((p,i)=>i?s.lineTo(p[0],p[1]):s.moveTo(p[0],p[1]));s.closePath();return s}
+function shapeFor(type,w,h,g=0){const e=g;if(type==='circle'){const s=new THREE.Shape();s.absarc(0,0,w/2+g,0,Math.PI*2);return s}
+ if(type==='tag')return poly([[-w*.30+e,h*.52+e],[w*.50+e,h*.52+e],[w*.50+e,h*.06+e],[-w*.18-e,-h*.52-e],[-w*.50-e,-h*.05-e]])
+ if(type==='hex')return poly([[-w*.28+e,h*.51+e],[w*.18+e,h*.49+e],[w*.49+e,-h*.03-e],[w*.26+e,-h*.46-e],[-w*.14-e,-h*.49-e],[-w*.51-e,h*.04+e]])
+ if(type==='kite')return poly([[-w*.50+e,h*.22+e],[w*.48+e,h*.48+e],[w*.50+e,-h*.09-e],[-w*.15-e,-h*.51-e]])
+ if(type==='rounded')return rr(w+g*2,h+g*2,Math.min(.16+g,.24))
+ return rr(w+g*2,h+g*2,Math.min(.16+g,.24))}
 
 function tex(kind,type){const c=document.createElement('canvas');c.width=c.height=512;const x=c.getContext('2d');const rect=(fill,a,b,w,h,r=26)=>{x.fillStyle=fill;x.beginPath();x.roundRect(a,b,w,h,r);x.fill()},circle=(fill,a,b,r)=>{x.fillStyle=fill;x.beginPath();x.arc(a,b,r,0,Math.PI*2);x.fill()};x.clearRect(0,0,512,512);
  if(kind==='gray'||kind==='light'||kind==='dark'){x.fillStyle=kind==='dark'?'#626364':kind==='light'?'#a5a6a6':'#acadae';x.fillRect(0,0,512,512);[[42,42],[470,42],[42,470],[470,470]].forEach(p=>circle(kind==='dark'?'#4e5051':'#737575',p[0],p[1],18))}
  if(kind==='leaf'){const g=x.createLinearGradient(0,0,512,512);g.addColorStop(0,'#105a25');g.addColorStop(1,'#0b3f18');x.fillStyle=g;x.fillRect(0,0,512,512);x.strokeStyle='#2f9449';x.lineCap='round';x.lineWidth=15;x.beginPath();x.moveTo(256,498);x.quadraticCurveTo(250,260,258,18);x.stroke();x.strokeStyle='#227a3c';x.lineWidth=8;for(let i=0;i<5;i++){const y=432-i*80;x.beginPath();x.moveTo(254,y);x.quadraticCurveTo(188,y-34,116,y-84);x.stroke();x.beginPath();x.moveTo(258,y);x.quadraticCurveTo(324,y-34,396,y-84);x.stroke()}}
+ if(kind==='leafKite'){const g=x.createLinearGradient(0,0,512,512);g.addColorStop(0,'#105a23');g.addColorStop(1,'#0a3d18');x.fillStyle=g;x.fillRect(0,0,512,512);x.strokeStyle='#083815';x.lineCap='round';x.lineWidth=26;x.beginPath();x.moveTo(70,310);x.quadraticCurveTo(260,255,435,180);x.stroke()}
+ if(kind==='leafCut'){const g=x.createLinearGradient(0,0,512,512);g.addColorStop(0,'#2d8a47');g.addColorStop(1,'#1f7038');x.fillStyle=g;x.fillRect(0,0,512,512);x.fillStyle='#dfff00';x.beginPath();x.moveTo(190,36);x.lineTo(87,174);x.lineTo(210,164);x.closePath();x.fill();circle('#ffffff',256,210,97);x.fillStyle='#9aa0ff';x.beginPath();x.moveTo(400,180);x.lineTo(343,338);x.lineTo(491,317);x.closePath();x.fill()}
+ if(kind==='greenSolid'){x.fillStyle='#54b35a';x.fillRect(0,0,512,512)}
+ if(kind==='greenMid'){x.fillStyle='#2f7d43';x.fillRect(0,0,512,512)}
+ if(kind==='cyanSolid'){x.fillStyle='#43d5ee';x.fillRect(0,0,512,512)}
+ if(kind==='minus'){x.fillStyle='#54b35a';x.fillRect(0,0,512,512);rect('#ffffff',138,224,236,64,30)}
+ if(kind==='rabbit'){x.fillStyle='#ffe100';x.fillRect(0,0,512,512);x.fillStyle='#fff';x.beginPath();x.ellipse(278,312,132,138,-.06,0,Math.PI*2);x.fill();x.beginPath();x.ellipse(232,152,44,122,-.2,0,Math.PI*2);x.fill();x.beginPath();x.ellipse(342,154,48,126,.26,0,Math.PI*2);x.fill();x.beginPath();x.ellipse(408,342,46,50,.2,0,Math.PI*2);x.fill()}
+ if(kind==='arrowLeaf'){x.fillStyle='#f2ff2b';x.fillRect(0,0,512,512);x.strokeStyle='#356b3f';x.lineCap='round';x.lineWidth=34;x.beginPath();x.moveTo(120,300);x.lineTo(350,300);x.stroke();x.fillStyle='#356b3f';x.beginPath();x.moveTo(352,210);x.lineTo(452,300);x.lineTo(352,390);x.closePath();x.fill()}
+ if(kind==='redStar'){x.fillStyle='#ff3236';x.fillRect(0,0,512,512);x.fillStyle='#12632c';x.beginPath();for(let i=0;i<16;i++){const a=i*Math.PI/8-Math.PI/2,r=i%2?44:128;const px=256+Math.cos(a)*r,py=256+Math.sin(a)*r;i?x.lineTo(px,py):x.moveTo(px,py)}x.closePath();x.fill()}
  if(kind==='cyan'){rect('#43d5ee',0,0,512,512,34);x.fillStyle='#08bde9';x.fillRect(72,70,62,62);x.fillRect(225,70,62,62);x.fillRect(378,70,62,62);x.fillRect(72,164,368,205);x.fillRect(72,400,62,62);x.fillRect(225,400,62,62);x.fillRect(378,400,62,62)}
  if(kind==='arrow'){rect('#ffdf00',0,0,512,512,30);x.fillStyle='#111';x.fillRect(130,224,315,64);x.beginPath();x.moveTo(58,256);x.lineTo(165,177);x.lineTo(165,335);x.closePath();x.fill()}
  if(kind==='orange'){rect('#fff',0,0,512,512,30);x.strokeStyle='#ff7330';x.lineWidth=20;x.beginPath();x.roundRect(24,24,464,464,22);x.stroke();x.fillStyle='#ff7330';x.beginPath();x.moveTo(148,325);x.bezierCurveTo(80,170,188,135,247,174);x.bezierCurveTo(330,70,355,135,354,220);x.bezierCurveTo(430,165,470,245,418,331);x.bezierCurveTo(360,407,214,394,148,325);x.fill()}
  if(kind==='green'){x.fillStyle='#009e4f';x.fillRect(0,0,512,512);circle('#ffff28',256,286,90);x.fillStyle='#ddd';x.beginPath();x.moveTo(256,55);x.lineTo(185,175);x.lineTo(327,175);x.fill();x.beginPath();x.moveTo(115,345);x.lineTo(55,450);x.lineTo(175,450);x.fill();x.beginPath();x.moveTo(397,345);x.lineTo(337,450);x.lineTo(457,450);x.fill()}
  if(kind==='yellow'){x.fillStyle='#ffe100';x.fillRect(0,0,512,512);x.fillStyle='#111';x.font='700 92px Arial';x.fillText('3',35,105);x.font='700 38px Arial';x.fillText('KM',120,74);x.fillStyle='#fff';x.beginPath();x.ellipse(270,320,92,130,-.2,0,Math.PI*2);x.ellipse(330,210,50,120,.5,0,Math.PI*2);x.fill();x.fillStyle='#ff7530';x.fillRect(0,455,512,57);x.strokeStyle='#fff';x.lineWidth=24;for(let i=-40;i<560;i+=82){x.beginPath();x.moveTo(i,512);x.lineTo(i+35,455);x.stroke()}}
- if(kind==='blue'){x.fillStyle='#314df4';x.fillRect(0,0,512,512);x.fillStyle='#fff';x.beginPath();x.roundRect(62,72,388,368,36);x.fill();x.fillStyle='#314df4';x.fillRect(95,155,320,170);x.strokeStyle='#fff';x.lineWidth=48;x.beginPath();x.moveTo(75,130);x.lineTo(430,390);x.moveTo(430,130);x.lineTo(75,390);x.stroke()}
+ if(kind==='blue'){x.fillStyle='#314df4';x.fillRect(0,0,512,512);x.strokeStyle='#fff';x.lineWidth=46;x.lineCap='round';x.lineJoin='round';x.beginPath();x.moveTo(105,180);x.lineTo(256,292);x.lineTo(407,180);x.stroke();x.beginPath();x.moveTo(105,180);x.lineTo(105,350);x.lineTo(407,350);x.lineTo(407,180);x.stroke()}
  if(kind==='geometry'){x.fillStyle='#0877d7';x.fillRect(0,0,512,512);x.fillStyle='#ffff2d';x.beginPath();x.moveTo(48,110);x.lineTo(290,256);x.lineTo(48,402);x.fill();circle('#fff',370,256,65);x.fillStyle='#ff7738';x.fillRect(450,100,45,312)}
  if(kind==='safe'){x.fillStyle='#ef2b0c';x.fillRect(0,0,512,512);x.strokeStyle='#fff';x.lineWidth=22;x.strokeRect(38,38,436,436);x.fillStyle='#fff';x.font='500 110px Arial';x.textAlign='center';x.fillText('SAFE',256,300)}
  if(kind==='fire'){x.fillStyle='#ff2e32';x.fillRect(0,0,512,512);x.strokeStyle='#fff';x.lineWidth=34;x.beginPath();x.arc(256,256,188,0,Math.PI*2);x.stroke();x.fillStyle='#fff';x.beginPath();x.moveTo(260,400);x.bezierCurveTo(120,360,175,230,220,185);x.lineTo(190,85);x.bezierCurveTo(315,160,260,220,325,265);x.bezierCurveTo(380,335,340,400,260,400);x.fill();x.strokeStyle='#ff2e32';x.lineWidth=28;x.beginPath();x.moveTo(140,100);x.lineTo(385,410);x.stroke()}
  if(kind==='alert'){x.fillStyle='#22cd29';x.fillRect(0,0,512,512);x.fillStyle='#0c4c24';x.beginPath();x.moveTo(256,72);x.lineTo(450,420);x.lineTo(62,420);x.closePath();x.fill();x.fillStyle='#fff';x.font='700 240px Arial';x.textAlign='center';x.fillText('!',256,385)}
  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t}
 
-const imageLoader=new THREE.TextureLoader();
-function imageMap(name){const t=imageLoader.load('./signpost/textures/'+name+'.png');t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t}
-function faceGeo(s,b=s.uv){const g=new THREE.ShapeGeometry(shapeFor(s.shape,s.w,s.h),48),p=g.attributes.position,u=g.attributes.uv;for(let i=0;i<p.count;i++){const nx=p.getX(i)/s.w+.5,ny=p.getY(i)/s.h+.5;if(b){const t=(ny+(b.pad||0))/(1+(b.pad||0));u.setXY(i,b.u0+nx*(b.u1-b.u0),b.v0+t*(b.v1-b.v0))}else u.setXY(i,nx,ny)}u.needsUpdate=true;return g}
+function faceGeo(s){const g=new THREE.ShapeGeometry(shapeFor(s.shape,s.w,s.h),48),p=g.attributes.position,u=g.attributes.uv;for(let i=0;i<p.count;i++){u.setXY(i,p.getX(i)/s.w+.5,p.getY(i)/s.h+.5)}u.needsUpdate=true;return g}
 
+const edgeColors={cyan:0x35c8e2,greenSolid:0x4ca850,greenMid:0x2f7d43,orange:0xf5f5f5,leafKite:0x0e4a1d,leaf:0x12632c,rabbit:0xf2d400,blue:0x2c46e0,redStar:0xe0282c,fire:0xf22d31,minus:0x4ca850,arrowLeaf:0xe6f026,cyanSolid:0x35c8e2};
 const clickables=[];
 signs.forEach((s,i)=>{
   const arm=new THREE.Group();arm.position.y=s.y;arm.rotation.y=s.angle;rig.add(arm);
-  const dir=s.side||1,len=s.side===0?.3:(s.w*.56+.28);
-  const bar=new THREE.Mesh(new THREE.CylinderGeometry(.05,.07,len,10),petioleMat);
-  bar.rotation.z=Math.PI/2;bar.position.x=s.side===0?0:dir*(len/2+.08);arm.add(bar);
-  const bud=budLeaf();bud.position.set(dir*.14,.08,0);bud.rotation.z=dir>0?-.6:Math.PI+.6;arm.add(bud);
-  const sign=new THREE.Group();sign.position.x=s.side===0?0:dir*(len+.08);sign.rotation.y=s.showFront?0:Math.PI;arm.add(sign);
-  const edge=(s.shape==='circle'||s.shape==='octagon')?s.w*.44:s.w*.46;
-  const berry=new THREE.Mesh(new THREE.SphereGeometry(.12,16,12),berryMat);
-  berry.position.x=s.side===0?0:dir*(len+.08-edge);arm.add(berry);
-  const rimGeo=new THREE.ExtrudeGeometry(shapeFor(s.shape,s.w,s.h,.055),{depth:.12,bevelEnabled:true,bevelSize:.025,bevelThickness:.025,bevelSegments:4,curveSegments:48});rimGeo.center();
-  const rim=new THREE.Mesh(rimGeo,leafEdgeMat);sign.add(rim);
-  const bodyGeo=new THREE.ExtrudeGeometry(shapeFor(s.shape,s.w,s.h),{depth:.14,bevelEnabled:true,bevelSize:.018,bevelThickness:.018,bevelSegments:3,curveSegments:48});bodyGeo.center();
-  const body=new THREE.Mesh(bodyGeo,leafMat);sign.add(body);
-  const kind=s.front==='01-top'?'cyan':s.front.slice(3);
-  const front=new THREE.Mesh(faceGeo(s,null),new THREE.MeshStandardMaterial({map:tex(kind),transparent:true,alphaTest:.02,roughness:.9,metalness:0}));
-  front.position.z=.092;front.scale.setScalar(s.shape==='triangle'?1.07:1.02);sign.add(front);
-  const back=new THREE.Mesh(faceGeo(s,null),new THREE.MeshStandardMaterial({map:tex('leaf'),roughness:.95,metalness:0}));
-  back.position.z=-.092;back.rotation.y=Math.PI;back.scale.setScalar(1.08);sign.add(back);
+  const dir=s.side||1,len=s.len||.3,barMat=s.gray?grayMat:s.dark?stemDarkMat:petioleMat;
+  const half=s.w/2;
+  const bar=new THREE.Mesh(new THREE.CylinderGeometry(s.gray? .065 : .05,.075,len,10),barMat);
+  bar.rotation.z=Math.PI/2;bar.position.x=dir*(len/2+.05);arm.add(bar);
+  if(s.bent){const b2=new THREE.Mesh(new THREE.CylinderGeometry(.055,.08,.36,8),stemDarkMat);
+   b2.position.set(dir*.14,.05,0);b2.rotation.z=dir>0?-.78:.78;arm.add(b2)}
+  const sign=new THREE.Group();sign.position.set(dir*(len+.04+half),0,s.zoff||0);sign.userData.baseZ=s.zoff||0;
+  sign.rotation.y=s.showFront===false?Math.PI:0;if(s.tilt)sign.rotation.z=s.tilt;
+  arm.add(sign);
+  const edgeMat=new THREE.MeshStandardMaterial({color:edgeColors[s.k]??0x12632c,roughness:.85,metalness:0});
+  const rimGeo=new THREE.ExtrudeGeometry(shapeFor(s.shape,s.w,s.h,.05),{depth:.12,bevelEnabled:true,bevelSize:.022,bevelThickness:.022,bevelSegments:4,curveSegments:48});rimGeo.center();
+  const rim=new THREE.Mesh(rimGeo,edgeMat);sign.add(rim);
+  const bodyGeo=new THREE.ExtrudeGeometry(shapeFor(s.shape,s.w,s.h),{depth:.13,bevelEnabled:true,bevelSize:.015,bevelThickness:.015,bevelSegments:3,curveSegments:48});bodyGeo.center();
+  const body=new THREE.Mesh(bodyGeo,edgeMat);sign.add(body);
+  const front=new THREE.Mesh(faceGeo(s),new THREE.MeshStandardMaterial({map:tex(s.k),transparent:true,alphaTest:.02,roughness:.9,metalness:0}));
+  front.position.z=.088;front.scale.setScalar(1.02);sign.add(front);
+  const back=new THREE.Mesh(faceGeo(s),new THREE.MeshStandardMaterial({map:tex(s.bk),transparent:true,alphaTest:.02,roughness:.92,metalness:0}));
+  back.position.z=-.088;back.rotation.y=Math.PI;back.scale.setScalar(1.07);sign.add(back);
+  if(s.berry){const br=new THREE.Mesh(new THREE.SphereGeometry(.13,16,12),berryMat);
+   br.position.set(s.berry[0],s.berry[1],.04);sign.add(br);
+   [br].forEach(o=>{o.userData.sign=sign;o.userData.idx=i;clickables.push(o)})}
   [rim,body,front,back].forEach(o=>{o.userData.sign=sign;o.userData.idx=i;clickables.push(o)});
 });
 
@@ -212,7 +227,8 @@ let down={x:0,y:0},focus=null,anim=null,saved=null,mode='idle';
 const panel=document.getElementById('detailPanel'),pTitle=document.getElementById('dTitle'),pMeta=document.getElementById('dMeta'),pBody=document.getElementById('dBody');
 const ease=t=>1-Math.pow(1-t,3);
 const state=()=>({cam:camera.position.clone(),target:controls.target.clone(),rig:rig.position.clone()});
-function tween(to,done){const from=state(),start=performance.now();anim={step(now){const t=Math.min(1,(now-start)/850),e=ease(t);camera.position.lerpVectors(from.cam,to.cam,e);controls.target.lerpVectors(from.target,to.target,e);rig.position.lerpVectors(from.rig,to.rig,e);camera.lookAt(controls.target);if(t===1){anim=null;done?.()}}}}
+let popObj=null;
+function tween(to,done){const from=state(),start=performance.now(),pop=popObj,pz=pop?pop.obj.position.z:0;anim={step(now){const t=Math.min(1,(now-start)/850),e=ease(t);camera.position.lerpVectors(from.cam,to.cam,e);controls.target.lerpVectors(from.target,to.target,e);rig.position.lerpVectors(from.rig,to.rig,e);if(pop)pop.obj.position.z=pz+(pop.tz-pz)*e;camera.lookAt(controls.target);if(t===1){anim=null;done?.()}}}}
 function signFrame(sign,dist,rightShift,targetShift){
   const center=new THREE.Vector3();sign.getWorldPosition(center);
   const normal=new THREE.Vector3(0,0,1).applyQuaternion(sign.getWorldQuaternion(new THREE.Quaternion())).normalize();
@@ -230,20 +246,23 @@ function fillPanel(idx){
 }
 function enterDetail(idx,sign){
   if(mode==='idle')saved=state();
+  if(popObj&&popObj.obj!==sign){popObj.obj.position.z=popObj.obj.userData.baseZ??0;popObj=null}
   focus=sign;mode='detail';controls.enabled=false;
   fillPanel(idx);
   const dir=signs[idx].side<0?-1:1;
   panel.classList.toggle('side-l',dir<0);
   panel.classList.toggle('side-r',dir>0);
   document.body.classList.add('detail-on');
+  popObj={obj:sign,tz:(sign.userData.baseZ??0)+.8};
   const{cam,target}=signFrame(sign,dir<0?5.35:4.9,(dir<0?0.32:0.55)*dir,(dir<0?0.95:1.3)*dir);
   tween({cam,target,rig:rig.position.clone()});
 }
 function restore(){
   if(!focus||!saved)return;
-  const to=saved;focus=null;mode='idle';
+  const to=saved,back=focus;
+  popObj={obj:back,tz:back.userData.baseZ??0};focus=null;mode='idle';
   document.body.classList.remove('detail-on');
-  tween(to,()=>{controls.enabled=true;controls.update();saved=null});
+  tween(to,()=>{controls.enabled=true;controls.update();saved=null;popObj=null});
 }
 function pickAt(cx,cy){
   pointer.x=cx/innerWidth*2-1;pointer.y=-(cy/innerHeight)*2+1;
