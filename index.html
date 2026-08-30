@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>gongxun · PORTFOLIO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#7ec9f5}
+body{font-family:"PingFang SC","PingFang TC",-apple-system,sans-serif;color:#F8FF3A}
+.bg-full{position:fixed;inset:0;z-index:0;background:url('images/figma-home/portfolio-bg.jpg') center/cover no-repeat;transition:filter .6s ease,transform .6s ease}
+body.detail-on .bg-full{filter:blur(18px) saturate(1.15);transform:scale(1.12)}
+#stage3d{position:fixed;inset:0;z-index:1;display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+#stage3d:active{cursor:grabbing}
+.board{position:absolute;left:50%;top:0;width:1920px;height:1002px;transform:translateX(-50%);transform-origin:top center;z-index:2;pointer-events:none}
+.nav{position:absolute;left:29px;top:15px;display:flex;gap:20px;pointer-events:auto}
+.nav a{font-size:20.7px;letter-spacing:-0.09em;line-height:29px;color:#F8FF3A;text-decoration:none;cursor:pointer;font-weight:400}
+.nav a:hover{text-decoration:underline;text-underline-offset:4px}
+.hint{position:absolute;left:50%;top:14px;transform:translateX(-50%);font-size:21.2px;letter-spacing:-0.09em;line-height:30px;white-space:nowrap;color:#F8FF3A}
+.logo{position:absolute;right:32px;top:0;font-family:'Nanum Pen Script',cursive;font-size:66px;line-height:76px;letter-spacing:-0.09em;color:#F8FF3A}
+.detail-panel{position:fixed;z-index:3;top:27.5%;pointer-events:none;opacity:0;transition:opacity .5s ease .18s,transform .5s ease .18s}
+.detail-panel.side-r{left:55%;width:37.6%;text-align:left;transform:translateX(34px)}
+.detail-panel.side-l{left:8.4%;width:37.6%;text-align:center;transform:translateX(-34px)}
+body.detail-on .detail-panel{opacity:1;transform:none}
+.dt{font-size:min(34px,1.77vw);font-weight:600;color:#fff;letter-spacing:-0.09em;line-height:1.4;text-shadow:0 2px 18px rgba(0,40,80,.35)}
+.dm{margin-top:.7em;font-size:min(20px,1.04vw);line-height:1.4;color:rgba(255,255,255,.85);letter-spacing:-0.09em;text-shadow:0 2px 14px rgba(0,40,80,.35)}
+.db{font-size:min(20px,1.04vw);line-height:1.4;color:rgba(255,255,255,.95);letter-spacing:-0.09em;text-shadow:0 2px 14px rgba(0,40,80,.4)}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/"}}</script>
+</head>
+<body>
+<div class="bg-full"></div>
+<div class="board">
+  <nav class="nav">
+    <a href="#">关于</a>
+    <a href="#">项目</a>
+    <a href="#">能力</a>
+  </nav>
+  <div class="hint">拖动水平旋转，点击牌路聚焦，点击空白返回</div>
+  <div class="logo">gongxun</div>
+</div>
+<div class="detail-panel" id="detailPanel">
+  <div class="dt" id="dTitle"></div>
+  <div class="dm" id="dMeta"></div>
+  <div id="dBody"></div>
+</div>
+<canvas id="stage3d"></canvas>
+<script type="module">
+import * as THREE from'three';
+import{OrbitControls}from'three/addons/controls/OrbitControls.js';
+
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(31,innerWidth/innerHeight,.1,100);
+camera.position.set(10.5,0.4,16.9);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,canvas:document.getElementById('stage3d')});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+renderer.setClearColor(0x000000,0);
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+
+scene.add(new THREE.HemisphereLight(0xffffff,0xc7c9cc,2.5));
+const key=new THREE.DirectionalLight(0xffffff,3.5);key.position.set(6,10,9);scene.add(key);
+const fill=new THREE.DirectionalLight(0xdbe3ef,1.4);fill.position.set(-8,3,-7);scene.add(fill);
+const rig=new THREE.Group();scene.add(rig);
+
+const poleMat=new THREE.MeshStandardMaterial({color:0x8f9193,roughness:.78,metalness:.18}),
+clampMat=new THREE.MeshStandardMaterial({color:0x303234,roughness:.7,metalness:.35}),
+armMat=new THREE.MeshStandardMaterial({color:0xbec0c2,roughness:.72,metalness:.2}),
+rimMat=new THREE.MeshStandardMaterial({color:0x9a9b9b,roughness:.72,metalness:.28}),
+sideMat=new THREE.MeshStandardMaterial({color:0xb4b5b4,roughness:.8,metalness:.18}),
+backMat=new THREE.MeshStandardMaterial({color:0xa2a3a3,roughness:.88,metalness:.08});
+
+const pole=new THREE.Mesh(new THREE.CylinderGeometry(.105,.12,9.9,28),poleMat);pole.position.y=.2;rig.add(pole);
+
+const signs=[
+ {shape:'square',y:4.65,side:1,angle:.18,w:1.06,h:1.03,front:'01-top',back:'gray',showFront:true},
+ {shape:'wide',y:3.82,side:-1,angle:-.48,w:2.38,h:.85,front:'02-arrow',back:'dark',showFront:false},
+ {shape:'wide',y:3.0,side:1,angle:.32,w:2.85,h:1.74,front:'03-orange',back:'dark',showFront:true},
+ {shape:'triangle',y:2.0,side:-1,angle:.58,w:2.05,h:1.88,front:'04-green',back:'light',showFront:false,uv:{u0:.0272,u1:.9711,v0:.0315,v1:.9704,pad:.037}},
+ {shape:'tall',y:.76,side:1,angle:-.24,w:1.58,h:2.22,front:'05-yellow',back:'light',showFront:true},
+ {shape:'square',y:-.48,side:-1,angle:-.72,w:1.95,h:1.91,front:'06-blue',back:'light',showFront:true},
+ {shape:'wide',y:-1.62,side:1,angle:.74,w:1.9,h:.67,front:'07-geometry',back:'dark',showFront:false},
+ {shape:'circle',y:-2.42,side:1,angle:-.56,w:1.72,h:1.72,front:'08-fire',back:'dark',showFront:true},
+ {shape:'octagon',y:-3.18,side:-1,angle:.16,w:.92,h:.92,front:'09-safe',back:'light',showFront:false},
+ {shape:'triangle',y:-4.15,side:-1,angle:.38,w:1.28,h:1.17,front:'10-alert',back:'light',showFront:true}
+];
+
+const details=[
+ {t:'关于我 / 视觉设计师',m:'2026 届应届 ｜ 坐标北京',b:[
+  '以 3D 路标串联整个作品集导航，拖动路牌可以旋转，点击路牌查看对应板块',
+  '方向覆盖视觉设计、品牌设计与 AIGC 创意生产，跟着路标依次探索',
+  '底部 PORTFOLIO 大字 O 里的头像就是我本人']},
+ {t:'导航 / 点击路牌聚焦',m:'拖动水平旋转 ｜ 单击查看详情',b:[
+  '单击任意路牌：镜头推近聚焦，背景虚化并展开文字介绍',
+  '继续单击其他路牌可直接切换详情内容',
+  '点击空白处退出详情模式，返回全景视图']},
+ {t:'美团大众点评 / 品牌营销设计师 / 实习',m:'时间：2025.03 – 2025.05 ｜ 累计落地项目：20+',b:[
+  '主导整合营销视觉设计：深度洞察"携宠出游"新兴生活方式，独立负责主视觉KV、线上活动页及线下《住玩攻略》地图等全链路物料设计，成功传递"宠物友好"品牌形象，有效提升必住榜在养宠人群中的品牌认知与好感度，并参与皇家宠物食品达成品牌合作；活动UV-CTR达0.72%，显著高于行业均值',
+  '负责多场景视觉设计与营销玩法页面设计：从0到1完成活动视觉策略制定、主KV设计及多端延展，精准契合"户外解压""地方美食"主题；针对"用户流量分散"的核心痛点，设计了一套以"收集贴纸"为激励的周期性任务玩法页面视觉设计，有效引导用户跨品类参与"解压""丽人"等场景活动',
+  '深化品牌触点体验与实体物料落地：主导"必住榜"内宣活动实体宣传物料设计，凭借优质物料推动活动参与度与反响双优，进一步扩大必住榜在员工内部的认知覆盖',
+  '头图动效设计：参与并负责5个活动头图的动效设计，以动态视觉呈现强化内容吸引力，提升用户点击率']},
+ {t:'BRAND MARKETING / 品牌营销',m:'品牌设计 ｜ 2024 – 2026',b:[
+  '品牌 VI 系统：标志、色彩、字体与应用规范搭建',
+  '包装设计：结构、材质与印刷工艺全程跟进',
+  'IP 形象与周边：从角色设定到实物打样落地']},
+ {t:'美团 / 品牌创意设计师 / 实习',m:'时间：2025.06 – 2025.08 ｜ 累计落地项目：20+',b:[
+  '主导2025教师节全案视觉：独立负责「点亮成长，聚光同行」活动设计，提出"知识隧道"创意策略，运用AIGC工具2天内产出3版高质量KV并获一次性通过，完成30+项物料延展，强化品牌感知',
+  '驱动AIGC设计流程革新：作为团队AIGC核心应用者，日均可根据项目最高输出10多版差异化提案，提升创意效率；设计可复用AI模板，赋能非设计人员快速产出，降低项目成本',
+  '打造高口碑文化实体产品：主导MVP文化贴纸系列设计，实现企业文化"软着陆"；设计袋鼠捏捏乐玩具包装设计，全程跟进印刷生产与质量把控，确保设计理念完美落地',
+  '优化品牌触点体验：利用AI视频生成公众号动态图标系统设计，融合实景插画与AI辅助设计，提升内容辨识度与用户体验',
+  '承担企业公益设计：参与"青山公益"项目视觉设计，运用Lora模型1.5天完成从创意到排版全流程，生动传递美团在环保领域的贡献，用设计践行企业社会责任',
+  '参与AI视频生成设计：参与美团袋鼠大艺术家宣传片AI视频生成设计，协助分镜生成与视频转场生成']},
+ {t:'美团 / 品牌创意设计师 / 实习',m:'时间：2025.06 – 2025.08 ｜ 累计落地项目：20+',b:[
+  '主导2025教师节全案视觉：独立负责「点亮成长，聚光同行」活动设计，提出"知识隧道"创意策略，运用AIGC工具2天内产出3版高质量KV并获一次性通过，完成30+项物料延展，强化品牌感知',
+  '驱动AIGC设计流程革新：作为团队AIGC核心应用者，日均可根据项目最高输出10多版差异化提案，提升创意效率；设计可复用AI模板，赋能非设计人员快速产出，降低项目成本',
+  '打造高口碑文化实体产品：主导MVP文化贴纸系列设计，实现企业文化"软着陆"；设计袋鼠捏捏乐玩具包装设计，全程跟进印刷生产与质量把控，确保设计理念完美落地',
+  '优化品牌触点体验：利用AI视频生成公众号动态图标系统设计，融合实景插画与AI辅助设计，提升内容辨识度与用户体验',
+  '承担企业公益设计：参与"青山公益"项目视觉设计，运用Lora模型1.5天完成从创意到排版全流程，生动传递美团在环保领域的贡献，用设计践行企业社会责任',
+  '参与AI视频生成设计：参与美团袋鼠大艺术家宣传片AI视频生成设计，协助分镜生成与视频转场生成']},
+ {t:'PROJECTS / 项目实践',m:'项目经历 ｜ 2023 – 2026',b:[
+  '校园与公益项目：用设计解决真实的传播问题',
+  '跨界协作：与插画、摄影、开发团队联合创作',
+  '设计竞赛：多项竞赛入围与获奖经历']},
+ {t:'网易雷火工作室 / 品牌营销设计师 / 实习',m:'时间：2024.06 – 2024.11 ｜ 累计落地项目：30+',b:[
+  '游戏全品类视觉适配与内容宣发物料创作：对接《永劫无间》《界外狂潮》《倩女幽魂》等游戏IP，独立完成角色宣传卡、预热海报、短视频宣发片头、线下推广展架等物料设计，确保视觉风格贴合游戏世界观（如武侠风、科幻风），强化IP辨识度',
+  '视觉资产规范化管理：按"IP类别+物料类型"分类归档海报、品牌手册等200+视觉素材，搭建团队素材库，助力后续设计效率提升30%',
+  '游戏营销场景落地：主导《永劫无间》CP30周边设计，结合游戏特色与玩家收藏需求，融入打卡元素，根据使用场景设计便携性高、趣味性强的周边，获玩家社群高频转发，强化用户粘性',
+  '品牌调性把控：参与线下游戏宣讲会PPT、品牌手册设计，确保全渠道视觉语言统一，传递游戏品牌核心价值，积累线下品牌露出物料设计经验']},
+ {t:'能力矩阵 / SKILLS',m:'工具与方法',b:[
+  '平面设计：Photoshop / Illustrator / Figma',
+  '三维与动效：Blender / Three.js / C4D 基础',
+  'AI 工具：Midjourney / 即梦 / AIGC 视频',
+  '设计方法：品牌策略 / 视觉传达 / 印刷工艺']},
+ {t:'OTHER DESIGN / 其他设计',m:'插画与实验',b:[
+  '手绘插画与涂鸦：个人化的兴趣表达',
+  '实验性版式：打破网格的自由排版探索',
+  '摄影记录：生活里的色彩与构图采集']}
+];
+
+function rr(w,h,r){const s=new THREE.Shape();s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);return s}
+function shapeFor(type,w,h,g=0){if(type==='circle'){const s=new THREE.Shape();s.absarc(0,0,w/2+g,0,Math.PI*2);return s}if(type==='triangle'){const s=new THREE.Shape();s.moveTo(0,h/2+g);s.lineTo(w/2+g,-h/2-g);s.quadraticCurveTo(w/2+g+.04,-h/2-g-.07,w/2+g-.08,-h/2-g-.07);s.lineTo(-w/2-g+.08,-h/2-g-.07);s.quadraticCurveTo(-w/2-g-.04,-h/2-g-.07,-w/2-g,-h/2-g);s.closePath();return s}if(type==='octagon'){const s=new THREE.Shape(),R=w/2+g;for(let i=0;i<8;i++){const a=Math.PI/8+i*Math.PI/4,x=Math.cos(a)*R,y=Math.sin(a)*R;i?s.lineTo(x,y):s.moveTo(x,y)}s.closePath();return s}return rr(w+g*2,h+g*2,Math.min(.1+g,.18))}
+
+function tex(kind,type){const c=document.createElement('canvas');c.width=c.height=512;const x=c.getContext('2d');const rect=(fill,a,b,w,h,r=26)=>{x.fillStyle=fill;x.beginPath();x.roundRect(a,b,w,h,r);x.fill()},circle=(fill,a,b,r)=>{x.fillStyle=fill;x.beginPath();x.arc(a,b,r,0,Math.PI*2);x.fill()};x.clearRect(0,0,512,512);
+ if(kind==='gray'||kind==='light'||kind==='dark'){x.fillStyle=kind==='dark'?'#626364':kind==='light'?'#a5a6a6':'#acadae';x.fillRect(0,0,512,512);[[42,42],[470,42],[42,470],[470,470]].forEach(p=>circle(kind==='dark'?'#4e5051':'#737575',p[0],p[1],18))}
+ if(kind==='cyan'){rect('#43d5ee',0,0,512,512,34);x.fillStyle='#08bde9';x.fillRect(72,70,62,62);x.fillRect(225,70,62,62);x.fillRect(378,70,62,62);x.fillRect(72,164,368,205);x.fillRect(72,400,62,62);x.fillRect(225,400,62,62);x.fillRect(378,400,62,62)}
+ if(kind==='arrow'){rect('#ffdf00',0,0,512,512,30);x.fillStyle='#111';x.fillRect(130,224,315,64);x.beginPath();x.moveTo(58,256);x.lineTo(165,177);x.lineTo(165,335);x.closePath();x.fill()}
+ if(kind==='orange'){rect('#fff',0,0,512,512,30);x.strokeStyle='#ff7330';x.lineWidth=20;x.beginPath();x.roundRect(24,24,464,464,22);x.stroke();x.fillStyle='#ff7330';x.beginPath();x.moveTo(148,325);x.bezierCurveTo(80,170,188,135,247,174);x.bezierCurveTo(330,70,355,135,354,220);x.bezierCurveTo(430,165,470,245,418,331);x.bezierCurveTo(360,407,214,394,148,325);x.fill()}
+ if(kind==='green'){x.fillStyle='#009e4f';x.fillRect(0,0,512,512);circle('#ffff28',256,286,90);x.fillStyle='#ddd';x.beginPath();x.moveTo(256,55);x.lineTo(185,175);x.lineTo(327,175);x.fill();x.beginPath();x.moveTo(115,345);x.lineTo(55,450);x.lineTo(175,450);x.fill();x.beginPath();x.moveTo(397,345);x.lineTo(337,450);x.lineTo(457,450);x.fill()}
+ if(kind==='yellow'){x.fillStyle='#ffe100';x.fillRect(0,0,512,512);x.fillStyle='#111';x.font='700 92px Arial';x.fillText('3',35,105);x.font='700 38px Arial';x.fillText('KM',120,74);x.fillStyle='#fff';x.beginPath();x.ellipse(270,320,92,130,-.2,0,Math.PI*2);x.ellipse(330,210,50,120,.5,0,Math.PI*2);x.fill();x.fillStyle='#ff7530';x.fillRect(0,455,512,57);x.strokeStyle='#fff';x.lineWidth=24;for(let i=-40;i<560;i+=82){x.beginPath();x.moveTo(i,512);x.lineTo(i+35,455);x.stroke()}}
+ if(kind==='blue'){x.fillStyle='#314df4';x.fillRect(0,0,512,512);x.fillStyle='#fff';x.beginPath();x.roundRect(62,72,388,368,36);x.fill();x.fillStyle='#314df4';x.fillRect(95,155,320,170);x.strokeStyle='#fff';x.lineWidth=48;x.beginPath();x.moveTo(75,130);x.lineTo(430,390);x.moveTo(430,130);x.lineTo(75,390);x.stroke()}
+ if(kind==='geometry'){x.fillStyle='#0877d7';x.fillRect(0,0,512,512);x.fillStyle='#ffff2d';x.beginPath();x.moveTo(48,110);x.lineTo(290,256);x.lineTo(48,402);x.fill();circle('#fff',370,256,65);x.fillStyle='#ff7738';x.fillRect(450,100,45,312)}
+ if(kind==='safe'){x.fillStyle='#ef2b0c';x.fillRect(0,0,512,512);x.strokeStyle='#fff';x.lineWidth=22;x.strokeRect(38,38,436,436);x.fillStyle='#fff';x.font='500 110px Arial';x.textAlign='center';x.fillText('SAFE',256,300)}
+ if(kind==='fire'){x.fillStyle='#ff2e32';x.fillRect(0,0,512,512);x.strokeStyle='#fff';x.lineWidth=34;x.beginPath();x.arc(256,256,188,0,Math.PI*2);x.stroke();x.fillStyle='#fff';x.beginPath();x.moveTo(260,400);x.bezierCurveTo(120,360,175,230,220,185);x.lineTo(190,85);x.bezierCurveTo(315,160,260,220,325,265);x.bezierCurveTo(380,335,340,400,260,400);x.fill();x.strokeStyle='#ff2e32';x.lineWidth=28;x.beginPath();x.moveTo(140,100);x.lineTo(385,410);x.stroke()}
+ if(kind==='alert'){x.fillStyle='#22cd29';x.fillRect(0,0,512,512);x.fillStyle='#0c4c24';x.beginPath();x.moveTo(256,72);x.lineTo(450,420);x.lineTo(62,420);x.closePath();x.fill();x.fillStyle='#fff';x.font='700 240px Arial';x.textAlign='center';x.fillText('!',256,385)}
+ const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t}
+
+const imageLoader=new THREE.TextureLoader();
+function imageMap(name){const t=imageLoader.load('./signpost/textures/'+name+'.png');t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t}
+function faceGeo(s){const g=new THREE.ShapeGeometry(shapeFor(s.shape,s.w,s.h),48),p=g.attributes.position,u=g.attributes.uv,b=s.uv;for(let i=0;i<p.count;i++){const nx=p.getX(i)/s.w+.5,ny=p.getY(i)/s.h+.5;if(b){const t=(ny+(b.pad||0))/(1+(b.pad||0));u.setXY(i,b.u0+nx*(b.u1-b.u0),b.v0+t*(b.v1-b.v0))}else u.setXY(i,nx,ny)}u.needsUpdate=true;return g}
+
+const clickables=[];
+signs.forEach((s,i)=>{
+  const arm=new THREE.Group();arm.position.y=s.y;arm.rotation.y=s.angle;rig.add(arm);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(.135,.025,10,30),clampMat);ring.rotation.x=Math.PI/2;ring.position.y=(i%2?1:-1)*.24;arm.add(ring);
+  const dir=s.side||1,len=s.side===0?.3:(s.w*.56+.28),bar=new THREE.Mesh(new THREE.BoxGeometry(len,.16,.16),armMat);
+  bar.position.x=s.side===0?0:dir*(len/2+.08);arm.add(bar);
+  const sign=new THREE.Group();sign.position.x=s.side===0?0:dir*(len+.08);sign.rotation.y=s.showFront?0:Math.PI;arm.add(sign);
+  const rimGeo=new THREE.ExtrudeGeometry(shapeFor(s.shape,s.w,s.h,.055),{depth:.12,bevelEnabled:true,bevelSize:.025,bevelThickness:.025,bevelSegments:4,curveSegments:48});rimGeo.center();
+  const rim=new THREE.Mesh(rimGeo,rimMat);sign.add(rim);
+  const bodyGeo=new THREE.ExtrudeGeometry(shapeFor(s.shape,s.w,s.h),{depth:.14,bevelEnabled:true,bevelSize:.018,bevelThickness:.018,bevelSegments:3,curveSegments:48});bodyGeo.center();
+  const body=new THREE.Mesh(bodyGeo,sideMat);sign.add(body);
+  const front=new THREE.Mesh(faceGeo(s),new THREE.MeshStandardMaterial({map:imageMap(s.front),transparent:true,alphaTest:.02,roughness:.92,metalness:0}));
+  front.position.z=.092;front.scale.setScalar(s.shape==='triangle'?1.07:1.02);sign.add(front);
+  const back=new THREE.Mesh(faceGeo(s),new THREE.MeshStandardMaterial({map:tex(s.back,s.shape),roughness:.95,metalness:.02}));
+  back.position.z=-.092;back.rotation.y=Math.PI;sign.add(back);
+  [rim,body,front,back].forEach(o=>{o.userData.sign=sign;o.userData.idx=i;clickables.push(o)});
+});
+
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;controls.enablePan=false;
+controls.target.set(0,.22,0);
+controls.minDistance=10;controls.maxDistance=34;
+controls.minPolarAngle=controls.maxPolarAngle=Math.PI/2;
+controls.update();
+
+const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
+let down={x:0,y:0},focus=null,anim=null,saved=null,mode='idle';
+const panel=document.getElementById('detailPanel'),pTitle=document.getElementById('dTitle'),pMeta=document.getElementById('dMeta'),pBody=document.getElementById('dBody');
+const ease=t=>1-Math.pow(1-t,3);
+const state=()=>({cam:camera.position.clone(),target:controls.target.clone(),rig:rig.position.clone()});
+function tween(to,done){const from=state(),start=performance.now();anim={step(now){const t=Math.min(1,(now-start)/850),e=ease(t);camera.position.lerpVectors(from.cam,to.cam,e);controls.target.lerpVectors(from.target,to.target,e);rig.position.lerpVectors(from.rig,to.rig,e);camera.lookAt(controls.target);if(t===1){anim=null;done?.()}}}}
+function signFrame(sign,dist,rightShift,targetShift){
+  const center=new THREE.Vector3();sign.getWorldPosition(center);
+  const normal=new THREE.Vector3(0,0,1).applyQuaternion(sign.getWorldQuaternion(new THREE.Quaternion())).normalize();
+  const right=new THREE.Vector3().crossVectors(normal,camera.up).negate().normalize();
+  const cam=center.clone().addScaledVector(normal,dist).addScaledVector(right,rightShift);
+  cam.y=center.y+0.05;
+  const target=center.clone().addScaledVector(right,targetShift);
+  return{cam,target};
+}
+function fillPanel(idx){
+  const d=details[idx]||details[0];
+  pTitle.textContent=d.t;
+  pMeta.textContent=d.m;
+  pBody.innerHTML=d.b.map(x=>`<p class="db">• ${x}</p>`).join('');
+}
+function enterDetail(idx,sign){
+  if(mode==='idle')saved=state();
+  focus=sign;mode='detail';controls.enabled=false;
+  fillPanel(idx);
+  const dir=signs[idx].side<0?-1:1;
+  panel.classList.toggle('side-l',dir<0);
+  panel.classList.toggle('side-r',dir>0);
+  document.body.classList.add('detail-on');
+  const{cam,target}=signFrame(sign,dir<0?5.35:4.9,(dir<0?0.32:0.55)*dir,(dir<0?0.95:1.3)*dir);
+  tween({cam,target,rig:rig.position.clone()});
+}
+function restore(){
+  if(!focus||!saved)return;
+  const to=saved;focus=null;mode='idle';
+  document.body.classList.remove('detail-on');
+  tween(to,()=>{controls.enabled=true;controls.update();saved=null});
+}
+function pickAt(cx,cy){
+  pointer.x=cx/innerWidth*2-1;pointer.y=-(cy/innerHeight)*2+1;
+  raycaster.setFromCamera(pointer,camera);
+  return raycaster.intersectObjects(clickables,false)[0];
+}
+
+renderer.domElement.addEventListener('pointerdown',e=>down={x:e.clientX,y:e.clientY});
+renderer.domElement.addEventListener('pointerup',e=>{
+  if(Math.hypot(e.clientX-down.x,e.clientY-down.y)>7||anim)return;
+  const hit=pickAt(e.clientX,e.clientY);
+  if(hit)enterDetail(hit.object.userData.idx,hit.object.userData.sign);
+  else if(mode==='detail')restore();
+});
+
+addEventListener('resize',()=>{
+  camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
+  fitBoard();
+});
+
+const board=document.querySelector('.board');
+function fitBoard(){const s=Math.min(innerWidth/1920,1);board.style.transform=`translateX(-50%) scale(${s})`}
+fitBoard();
+
+function loop(now){requestAnimationFrame(loop);if(anim)anim.step(now);else controls.update();renderer.render(scene,camera)}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
