@@ -88,16 +88,16 @@ rig.add(new THREE.Mesh(new THREE.TubeGeometry(stemCurve,90,.105,14,false),stemMa
  th.rotation.z=side*(Math.PI/2-.4);th.rotation.y=(y%1)*.4;rig.add(th)});
 
 const signs=[
- {shape:'rounded',y:3.8,side:1,angle:.22,tilt:.02,w:.88,h:.74,k:'cyan',bk:'cyanSolid',len:.25,zoff:.32},
- {shape:'circle',y:3.55,side:-1,angle:-.18,w:1.22,h:1.22,k:'greenSolid',bk:'greenSolid',len:.16,bent:true,zoff:.22},
- {shape:'rounded',y:1.95,side:1,angle:.3,tilt:.14,w:1.62,h:1.28,k:'orange',bk:'greenMid',len:.4,berry:[.82,.58],zoff:-.35},
- {shape:'kite',y:.75,side:-1,angle:-.26,tilt:-.12,w:2.62,h:2.4,k:'leafKite',bk:'leafCut',len:.12,zoff:-.55},
- {shape:'tag',y:-.95,side:1,angle:.1,tilt:.08,w:2.55,h:2.2,k:'rabbit',bk:'leaf',len:.12,berry:[1.22,-.1],zoff:.5},
- {shape:'hex',y:-1.15,side:-1,angle:-.22,tilt:.03,w:3.0,h:2.6,k:'blue',bk:'leaf',len:.12,berry:[-1.45,-1.15],zoff:-.25},
- {shape:'tag',y:-3.5,side:1,angle:.5,tilt:-.3,w:1.62,h:1.7,k:'arrowLeaf',bk:'leaf',len:.2,zoff:-.65,showFront:false},
- {shape:'circle',y:-2.05,side:1,angle:-.1,w:1.56,h:1.56,k:'fire',bk:'redStar',len:.5,berry:[.7,-.7],gray:true,zoff:.15},
- {shape:'circle',y:-2.9,side:-1,angle:.16,w:1.26,h:1.26,k:'minus',bk:'greenSolid',len:.12,dark:true,zoff:-.45},
- {shape:'kite',y:-3.8,side:1,angle:.2,tilt:-.25,w:1.36,h:1.5,k:'leafKite',bk:'leafKite',len:.08,zoff:.55}
+ {shape:'rounded',y:3.8,side:1,angle:.22,tilt:.02,w:.88,h:.74,k:'cyan',bk:'cyanSolid',len:.25,zoff:.32,dy:.06},
+ {shape:'circle',y:3.55,side:-1,angle:-.18,w:1.22,h:1.22,k:'greenSolid',bk:'greenSolid',len:.16,zoff:.22,dy:.26},
+ {shape:'rounded',y:1.95,side:1,angle:.3,tilt:.14,w:1.62,h:1.28,k:'orange',bk:'greenMid',len:.4,berry:[.82,.58],zoff:-.35,dy:-.1},
+ {shape:'kite',y:.75,side:-1,angle:-.26,tilt:-.12,w:2.62,h:2.4,k:'leafKite',bk:'leafCut',len:.12,zoff:-.55,dy:.1},
+ {shape:'tag',y:-.95,side:1,angle:.1,tilt:.08,w:2.55,h:2.2,k:'rabbit',bk:'leaf',len:.12,berry:[1.22,-.1],zoff:.5,dy:.12},
+ {shape:'hex',y:-1.15,side:-1,angle:-.22,tilt:.03,w:3.0,h:2.6,k:'blue',bk:'leaf',len:.12,berry:[-1.45,-1.15],zoff:-.25,dy:-.14},
+ {shape:'tag',y:-3.5,side:1,angle:.5,tilt:-.3,w:1.62,h:1.7,k:'arrowLeaf',bk:'leaf',len:.2,zoff:-.65,dy:.18,showFront:false},
+ {shape:'circle',y:-2.05,side:1,angle:-.1,w:1.56,h:1.56,k:'fire',bk:'redStar',len:.5,berry:[.7,-.7],gray:true,zoff:.15,dy:0},
+ {shape:'circle',y:-2.9,side:-1,angle:.16,w:1.26,h:1.26,k:'minus',bk:'greenSolid',len:.12,dark:true,zoff:-.45,dy:.06},
+ {shape:'kite',y:-3.8,side:1,angle:.2,tilt:-.25,w:1.36,h:1.5,k:'leafKite',bk:'leafKite',len:.08,zoff:.55,dy:-.12}
 ];
 
 const details=[
@@ -188,16 +188,22 @@ function tex(kind,type){const c=document.createElement('canvas');c.width=c.heigh
 function faceGeo(s){const g=new THREE.ShapeGeometry(shapeFor(s.shape,s.w,s.h),48),p=g.attributes.position,u=g.attributes.uv;for(let i=0;i<p.count;i++){u.setXY(i,p.getX(i)/s.w+.5,p.getY(i)/s.h+.5)}u.needsUpdate=true;return g}
 
 const edgeColors={cyan:0x35c8e2,greenSolid:0x4ca850,greenMid:0x2f7d43,orange:0xf5f5f5,leafKite:0x0e4a1d,leaf:0x12632c,rabbit:0xf2d400,blue:0x2c46e0,redStar:0xe0282c,fire:0xf22d31,minus:0x4ca850,arrowLeaf:0xe6f026,cyanSolid:0x35c8e2};
+function barBetween(a,b,r1,r2,mat){
+  const v=new THREE.Vector3().subVectors(b,a),l=v.length();
+  const m=new THREE.Mesh(new THREE.CylinderGeometry(r2,r1,l,10),mat);
+  m.position.copy(a).addScaledVector(v,.5);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),v.clone().normalize());
+  return m;
+}
 const clickables=[];
 signs.forEach((s,i)=>{
   const arm=new THREE.Group();arm.position.y=s.y;arm.rotation.y=s.angle;rig.add(arm);
   const dir=s.side||1,len=s.len||.3,barMat=s.gray?grayMat:s.dark?stemDarkMat:petioleMat;
-  const half=s.w/2;
-  const bar=new THREE.Mesh(new THREE.CylinderGeometry(s.gray? .065 : .05,.075,len,10),barMat);
-  bar.rotation.z=Math.PI/2;bar.position.x=dir*(len/2+.05);arm.add(bar);
-  if(s.bent){const b2=new THREE.Mesh(new THREE.CylinderGeometry(.055,.08,.36,8),stemDarkMat);
-   b2.position.set(dir*.14,.05,0);b2.rotation.z=dir>0?-.78:.78;arm.add(b2)}
-  const sign=new THREE.Group();sign.position.set(dir*(len+.04+half),0,s.zoff||0);sign.userData.baseZ=s.zoff||0;
+  const half=s.w/2,z=s.zoff||0,dy=s.dy||0;
+  const A=new THREE.Vector3(dir*.06,0,0);
+  const B=new THREE.Vector3(dir*(len+.06+.02*s.w),dy,z);
+  arm.add(barBetween(A,B,.085,s.gray?.062:.05,barMat));
+  const sign=new THREE.Group();sign.position.set(dir*(len+.04+half),dy,z);sign.userData.baseZ=z;
   sign.rotation.y=s.showFront===false?Math.PI:0;if(s.tilt)sign.rotation.z=s.tilt;
   arm.add(sign);
   const edgeMat=new THREE.MeshStandardMaterial({color:edgeColors[s.k]??0x12632c,roughness:.85,metalness:0});
