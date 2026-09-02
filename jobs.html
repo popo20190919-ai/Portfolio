@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视觉岗位看板 — VISUAL DESIGN JOB BOARD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="jobs.css">
+</head>
+<body>
+
+    <nav class="top-nav">
+        <div class="top-nav-inner">
+            <div class="nav-left">
+                <a class="nav-link" href="index.html">← MOODBOARD</a>
+                <span class="nav-divider"></span>
+                <span class="nav-link nav-current">JOB BOARD</span>
+            </div>
+            <div class="nav-right" id="companyFilters"></div>
+        </div>
+    </nav>
+
+    <header class="masthead">
+        <h1 class="wordmark">视觉岗位看板。</h1>
+        <div class="masthead-meta">
+            <span>VISUAL DESIGNER JOBS — 小红书 / 腾讯音乐 / 腾讯 / 阿里 / 蚂蚁</span>
+            <span class="count">数据截至 2026.08.29 · 共 <span id="jobCount">0</span> 个岗位</span>
+        </div>
+    </header>
+
+    <div class="keyword-bar">
+        <span class="keyword-bar-label">关键词</span>
+        <div class="keyword-list" id="tagFilters"></div>
+        <span class="keyword-bar-label" style="margin-left:auto;">状态</span>
+        <div class="status-filters" id="statusFilters"></div>
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="searchInput" class="search-input" placeholder="搜索岗位名称 / 城市 / 业务线 / 关键词…">
+        <button class="btn btn-primary" id="clearSearch">清除</button>
+    </div>
+
+    <div class="stats-strip" id="statsStrip"></div>
+
+    <main class="main">
+        <div class="job-grid" id="jobGrid"></div>
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <h3>没有匹配的岗位</h3>
+            <p>试试清除筛选条件或更换关键词。</p>
+            <button class="btn btn-primary" id="resetFilters">重置筛选</button>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="jobModal">
+        <div class="job-modal">
+            <button class="modal-close" id="closeJobModal">&times;</button>
+            <div class="job-modal-body" id="jobModalBody"></div>
+        </div>
+    </div>
+
+    <script src="jobs.js"></script>
+</body>
+</html>

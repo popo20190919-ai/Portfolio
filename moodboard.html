@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设计风格收集 — 品牌灵感库</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=7">
+</head>
+<body>
+
+    <nav class="top-nav">
+        <div class="top-nav-inner">
+            <div class="nav-left">
+                <a class="nav-link" href="index.html">首页</a>
+                <button class="nav-link" id="feedBtn">全部</button>
+                <button class="nav-link" id="uploadBtn">上传</button>
+            </div>
+            <div class="nav-right" id="brandFilters">
+                <label class="filter-checkbox">
+                    <input type="radio" name="brandFilter" value="all" checked>
+                    <span class="checkbox-square"></span>
+                    全部
+                </label>
+                <label class="filter-checkbox">
+                    <input type="radio" name="brandFilter" value="jianying">
+                    <span class="checkbox-square"></span>
+                    <img class="nav-logo" src="images/logos/jianying.png" alt="">
+                    剪映
+                </label>
+                <label class="filter-checkbox">
+                    <input type="radio" name="brandFilter" value="xingtu">
+                    <span class="checkbox-square"></span>
+                    <img class="nav-logo" src="images/logos/xingtu.png" alt="">
+                    醒图
+                </label>
+                <label class="filter-checkbox">
+                    <input type="radio" name="brandFilter" value="jimeng">
+                    <span class="checkbox-square"></span>
+                    <img class="nav-logo" src="images/logos/jimeng-icon.png" alt="">
+                    即梦
+                </label>
+            </div>
+        </div>
+    </nav>
+
+    <header class="masthead">
+        <h1 class="wordmark">设计风格收集。</h1>
+        <div class="masthead-meta">
+            <span>视觉参考档案 — 三个品牌，一个网格。</span>
+            <span class="count">共 <span id="imageCount">0</span> 条参考</span>
+        </div>
+    </header>
+
+    <div class="category-bar" id="categoryBar" style="display: none;">
+        <span class="keyword-bar-label">大类</span>
+        <div class="keyword-list" id="categoryList"></div>
+    </div>
+
+    <div class="keyword-bar" id="keywordBar">
+        <span class="keyword-bar-label">关键词</span>
+        <div class="keyword-list" id="keywordList"></div>
+    </div>
+
+    <main class="main">
+        <div class="editorial-grid" id="editorialGrid"></div>
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <h3>暂无参考图</h3>
+            <p>点击顶部「上传」按钮，开始收集你的品牌视觉灵感。</p>
+            <button class="btn btn-primary" onclick="document.getElementById('uploadBtn').click()">立即上传</button>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>上传参考图</h3>
+                <button class="modal-close" id="closeUploadModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-tabs">
+                    <button class="upload-tab active" data-tab="local">本地文件</button>
+                    <button class="upload-tab" data-tab="url">网址导入</button>
+                </div>
+
+                <div class="upload-tab-content" id="localTab">
+                    <div class="upload-zone" id="uploadZone">
+                        <input type="file" id="fileInput" accept="image/*" multiple hidden>
+                        <p>拖拽图片到此处，或<span class="upload-link">点击选择文件</span></p>
+                        <p class="upload-hint">支持 JPG、PNG、WebP 格式，可多选</p>
+                    </div>
+                    <div class="preview-area" id="previewArea" style="display: none;">
+                        <div class="preview-grid" id="previewGrid"></div>
+                    </div>
+                </div>
+
+                <div class="upload-tab-content" id="urlTab" style="display: none;">
+                    <div class="url-import-area">
+                        <label class="form-label">图片链接 — 每行一个</label>
+                        <textarea id="urlInput" class="form-textarea" rows="4" placeholder="https://example.com/image-01.jpg&#10;https://example.com/image-02.jpg&#10;https://example.com/image-03.jpg"></textarea>
+                        <button class="btn btn-secondary btn-preview-url" id="previewUrlBtn">预览链接</button>
+                    </div>
+                    <div class="preview-area" id="urlPreviewArea" style="display: none;">
+                        <div class="preview-grid" id="urlPreviewGrid"></div>
+                    </div>
+                    <p class="url-hint">支持 Unsplash、Pixabay、Pinterest 等允许外链的图片网站，部分网站可能因防盗链无法显示。</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">品牌 <span class="required">*</span></label>
+                    <div class="brand-selector" id="brandSelector">
+                        <label class="brand-option">
+                            <input type="radio" name="brand" value="jianying" checked>
+                            <span class="brand-option-row">
+                                <img class="brand-option-logo" src="images/logos/jianying.png" alt="">
+                                <span class="brand-option-name">剪映 / CC</span>
+                                <span class="brand-option-desc">年轻、活力、明亮</span>
+                            </span>
+                        </label>
+                        <label class="brand-option">
+                            <input type="radio" name="brand" value="xingtu">
+                            <span class="brand-option-row">
+                                <img class="brand-option-logo" src="images/logos/xingtu.png" alt="">
+                                <span class="brand-option-name">醒图 / Hypic</span>
+                                <span class="brand-option-desc">清透、精致、时尚</span>
+                            </span>
+                        </label>
+                        <label class="brand-option">
+                            <input type="radio" name="brand" value="jimeng">
+                            <span class="brand-option-row">
+                                <img class="brand-option-logo" src="images/logos/jimeng-icon.png" alt="">
+                                <span class="brand-option-name">即梦</span>
+                                <span class="brand-option-desc">梦幻、电影、创意</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">关键词标签</label>
+                    <div class="tag-input-container">
+                        <div class="tag-list" id="tagList"></div>
+                        <input type="text" id="tagInput" class="tag-input" placeholder="输入关键词后按回车添加..." maxlength="20">
+                    </div>
+                    <div class="preset-tags" id="presetTags"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">备注（可选）</label>
+                    <textarea id="noteInput" class="form-textarea" rows="2" placeholder="记录灵感来源、用途、观察等..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelUpload">取消</button>
+                <button class="btn btn-primary" id="confirmUpload">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="imageModal">
+        <div class="image-modal">
+            <button class="modal-close image-modal-close" id="closeImageModal">&times;</button>
+            <div class="image-modal-image">
+                <img id="modalImage" src="" alt="">
+            </div>
+            <div class="image-modal-info">
+                <div class="modal-brand-label" id="modalBrand"></div>
+                <div class="modal-category" id="modalCategory"></div>
+                <div class="modal-tags" id="modalTags"></div>
+                <div class="modal-note" id="modalNote"></div>
+                <div class="modal-date" id="modalDate"></div>
+                <div class="modal-actions">
+                    <button class="btn btn-danger" id="deleteImageBtn">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=6"></script>
+</body>
+</html>

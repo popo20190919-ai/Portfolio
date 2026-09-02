@@ -1,0 +1,643 @@
+/* ============================================================
+   App Store 投放模板工坊 — poster.css
+   编辑器外壳 + 6.7 寸海报（1284×2778 设计稿，素材来自 Figma）
+   ============================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    background: #101013;
+    color: #ececf1;
+    font-family: "Noto Sans SC", "PingFang SC", sans-serif;
+}
+
+/* ---------- 顶栏 ---------- */
+.pe-top {
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 22px;
+    background: #17171c;
+    border-bottom: 1px solid #2a2a32;
+}
+.pe-top-left { display: flex; align-items: baseline; gap: 12px; }
+.pe-logo { font-size: 17px; font-weight: 900; letter-spacing: 1px; }
+.pe-logo-en { font-size: 11px; color: #7a7a86; letter-spacing: 2px; }
+.pe-top-right { display: flex; gap: 10px; }
+
+.pe-btn {
+    font-family: inherit;
+    font-size: 13px;
+    color: #ececf1;
+    background: #26262e;
+    border: 1px solid #3a3a44;
+    border-radius: 10px;
+    padding: 9px 16px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+}
+.pe-btn:hover { background: #30303a; border-color: #4d4d5c; }
+.pe-btn-primary {
+    background: #2f6bff;
+    border-color: #2f6bff;
+    font-weight: 700;
+}
+.pe-btn-primary:hover { background: #3d77ff; border-color: #3d77ff; }
+.pe-btn-block { width: 100%; margin-top: 8px; }
+.pe-btn-ghost { background: transparent; }
+.pe-btn-sm { padding: 8px 6px; font-size: 12px; }
+.pe-btn-row { display: flex; gap: 8px; margin-top: 8px; }
+.pe-btn-row .pe-btn { flex: 1; margin-top: 0; }
+.pe-btn-toggle.on {
+    background: #2f6bff;
+    border-color: #2f6bff;
+    color: #fff;
+    font-weight: 700;
+}
+
+/* ---------- 整体布局 ---------- */
+.pe-body {
+    display: flex;
+    height: calc(100% - 58px);
+}
+
+/* ---------- 左栏：模板 / 素材库 ---------- */
+.pe-rail {
+    width: 236px;
+    flex-shrink: 0;
+    background: #17171c;
+    border-right: 1px solid #2a2a32;
+    overflow-y: auto;
+    padding: 14px 14px 30px;
+}
+.pe-rail-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.pe-rail-tab {
+    flex: 1;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: #a8a8b4;
+    background: #1e1e26;
+    border: 1px solid #2e2e38;
+    border-radius: 10px;
+    padding: 9px 0;
+    cursor: pointer;
+}
+.pe-rail-tab.on {
+    color: #fff;
+    background: #2f6bff;
+    border-color: #2f6bff;
+}
+.pe-rail-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #7a7a86;
+    margin-bottom: 14px;
+    padding-left: 4px;
+}
+.pe-tpl-card {
+    margin-bottom: 16px;
+    cursor: pointer;
+    border-radius: 14px;
+    padding: 8px;
+    border: 2px solid transparent;
+    transition: border-color .15s, background .15s;
+}
+.pe-tpl-card:hover { background: #1e1e26; }
+.pe-tpl-card.active { border-color: #2f6bff; background: #1c2130; }
+.pe-thumb {
+    width: 100%;
+    aspect-ratio: 1284 / 2778;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    background: #000;
+}
+.pe-thumb-scale {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1284px;
+    height: 2778px;
+    transform-origin: top left;
+    pointer-events: none;
+}
+.pe-tpl-name {
+    font-size: 13px;
+    text-align: center;
+    margin-top: 8px;
+    color: #c8c8d2;
+}
+.pe-tpl-card.active .pe-tpl-name { color: #fff; font-weight: 700; }
+
+/* 素材库网格 */
+.pe-stk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.pe-btn-upload {
+    background: #20315c;
+    border-color: #34508f;
+    font-weight: 700;
+}
+.pe-btn-upload:hover { background: #273e74; border-color: #4164b0; }
+.pe-stk-tip { margin: 8px 2px 14px; }
+.pe-stk {
+    position: relative;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: center;
+    background: #1e1e26;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 8px;
+    transition: border-color .15s, background .15s;
+}
+.pe-stk:hover { border-color: #4d6fd6; background: #232330; }
+.pe-stk img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    background: rgba(255,255,255,.05);
+    border-radius: 8px;
+    -webkit-user-drag: none;
+}
+.pe-stk-name {
+    font-size: 12px;
+    color: #c8c8d2;
+    margin-top: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.pe-stk.custom { border-color: #3a3a44; }
+.pe-stk.custom:hover { border-color: #4d6fd6; }
+.pe-stk-del {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #e5484d;
+    color: #fff;
+    font-size: 15px;
+    line-height: 22px;
+    text-align: center;
+    border: 2px solid #17171c;
+    z-index: 2;
+    display: none;
+}
+.pe-stk.custom:hover .pe-stk-del { display: block; }
+.pe-stk-del:hover { background: #ff5f64; }
+
+/* ---------- 中栏：舞台 ---------- */
+.pe-stage {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 50% 40%, #1a1a20 0%, #0d0d10 70%);
+}
+.pe-poster-wrap {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1284px;
+    height: 2778px;
+    transform-origin: center center;
+}
+.pe-stage-hint {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #6a6a76;
+    background: rgba(20,20,26,.75);
+    padding: 7px 16px;
+    border-radius: 20px;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* ---------- 右栏：编辑面板 ---------- */
+.pe-panel {
+    width: 302px;
+    flex-shrink: 0;
+    background: #17171c;
+    border-left: 1px solid #2a2a32;
+    overflow-y: auto;
+    padding: 18px 18px 40px;
+}
+.pe-sec { padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px solid #26262e; }
+.pe-sec-foot { border-bottom: none; margin-bottom: 0; }
+.pe-sec-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #7a7a86;
+    margin-bottom: 12px;
+}
+.pe-field-label {
+    display: block;
+    font-size: 12px;
+    color: #a8a8b4;
+    margin: 12px 0 6px;
+}
+.pe-val { color: #ececf1; font-size: 12px; }
+.pe-input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 13px;
+    color: #ececf1;
+    background: #101014;
+    border: 1px solid #33333e;
+    border-radius: 9px;
+    padding: 10px 12px;
+    outline: none;
+}
+.pe-input:focus { border-color: #2f6bff; }
+select.pe-input { cursor: pointer; }
+.pe-range {
+    width: 100%;
+    accent-color: #2f6bff;
+    cursor: pointer;
+}
+.pe-swatches { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+.pe-swatch {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid #3a3a44;
+    cursor: pointer;
+    padding: 0;
+}
+.pe-swatch.on { border-color: #2f6bff; box-shadow: 0 0 0 2px rgba(47,107,255,.35); }
+.pe-color {
+    width: 30px; height: 30px;
+    border: none; border-radius: 50%;
+    background: none; padding: 0;
+    cursor: pointer;
+}
+.pe-file-name {
+    font-size: 11px;
+    color: #7a7a86;
+    margin: 8px 2px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.pe-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #c8c8d2;
+    margin-top: 14px;
+    cursor: pointer;
+}
+.pe-check input { accent-color: #2f6bff; width: 15px; height: 15px; }
+.pe-tip { font-size: 11px; color: #7a7a86; line-height: 1.7; margin-top: 8px; }
+
+/* 导出用离屏容器 */
+#exportHost {
+    position: fixed;
+    left: -20000px;
+    top: 0;
+    pointer-events: none;
+}
+
+/* ============================================================
+   海报本体 — 设计坐标 1284 × 2778（Figma 1:1）
+   ============================================================ */
+.poster {
+    width: 1284px;
+    height: 2778px;
+    position: relative;
+    background: #000;
+    overflow: hidden;
+    cursor: pointer;
+    font-family: var(--pfont, "Noto Sans SC", sans-serif);
+}
+.p-board {
+    position: absolute;
+    left: 0; top: 0;
+    width: 1284px;
+    height: 2778px;
+    pointer-events: none;
+    user-select: none;
+}
+.p-title {
+    position: absolute;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: var(--psize, 116px);
+    font-weight: var(--pweight, 900);
+    color: var(--pcolor, #fff);
+    line-height: 1.35;
+    letter-spacing: 3px;
+    padding: 0 90px;
+    word-break: break-word;
+    pointer-events: none;
+}
+.p-sub {
+    position: absolute;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: var(--pssize, 62px);
+    font-weight: var(--psweight, 400);
+    color: var(--pscolor, rgba(255,255,255,.62));
+    line-height: 1.4;
+    letter-spacing: 2px;
+    padding: 0 100px;
+    word-break: break-word;
+    pointer-events: none;
+}
+/* Figma 导出的手机内节点（界面元素 / 默认画面） */
+.p-node {
+    position: absolute;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+}
+.p-chrome.off { display: none; }
+/* 用户上传的手机画面（裁切到媒体区，沿用 Figma 圆角） */
+.p-media {
+    position: absolute;
+    overflow: hidden;
+    pointer-events: none;
+}
+.p-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+/* 用户图层：人物 / 素材贴纸（可拖拽缩放） */
+.p-layer {
+    position: absolute;
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: grab;
+    transform-origin: center center;
+}
+.p-layer.sel { outline: 5px dashed #2f6bff; outline-offset: 5px; }
+.p-layer:active { cursor: grabbing; }
+
+/* 界面小图槽位：悬浮头像卡 / 圆形角色头像（用户可上传替换） */
+.p-slot {
+    position: absolute;
+    pointer-events: none;
+}
+.slot-card-body {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    border-radius: 29px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+    transform: rotate(-8deg);
+    transform-origin: center center;
+}
+.slot-card-body .slot-img {
+    position: absolute;
+    left: 18px;
+    top: 18px;
+    width: 288px;
+    height: 346px;
+    border-radius: 16px;
+    object-fit: cover;
+    display: block;
+}
+.slot-arrow {
+    position: absolute;
+    right: -32px;
+    top: 190px;
+    width: 98px;
+    height: 98px;
+    border-radius: 50%;
+    background: #cff8ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 16px rgba(7, 120, 160, 0.35);
+}
+.slot-arrow i {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: normal;
+    font-size: 46px;
+    font-weight: 900;
+    color: #07e1f9;
+    line-height: 1;
+    padding-bottom: 8px;
+}
+.p-slot-circle {
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
+}
+.p-slot-circle .slot-img {
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    width: 266px;
+    height: 266px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+/* 界面小图槽位：面板缩略图（圆角矩形覆盖层，随界面开关隐藏） */
+.p-slot-thumb {
+    overflow: hidden;
+}
+.p-slot-thumb .slot-thumb-img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.slot-check {
+    position: absolute;
+    right: 14px;
+    bottom: 18px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #07e1f9;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1;
+    padding-bottom: 5px;
+    box-shadow: 0 4px 10px rgba(0, 90, 120, 0.35);
+}
+/* 面板：界面小图槽位行 */
+.pe-slot-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+.pe-slot-name {
+    flex: 1;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 海报内：可编辑文字槽位（气泡 / 字幕 / 输入框 / 提示词） */
+.p-textslot {
+    position: absolute;
+    pointer-events: none;
+    user-select: none;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: "PingFang SC", "Noto Sans SC", sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+/* 提示词参考项：行内 chip（头像圆 + 青色标签），随文字流换行 */
+.p-chip {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    gap: 7px;
+    margin: 0;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+    transform: translateY(-3px);
+}
+.p-chip-av {
+    flex: none;
+    width: 53px;
+    height: 53px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #ffffff;
+}
+.p-chip-av img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.p-chip-lb {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 53px;
+    line-height: 1;
+    background: rgba(0, 202, 224, 0.4);
+    border-radius: 9.6px;
+    color: #ffffff;
+    font-family: "PingFang SC", "Noto Sans SC", sans-serif;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+/* 面板：文字槽位编辑行 */
+.pe-slot-text {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+}
+.pe-slot-text .pe-slot-name {
+    flex: none;
+}
+.pe-text-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+.pe-text-in {
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 54px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 13px;
+    line-height: 1.5;
+    font-family: inherit;
+    padding: 8px 10px;
+}
+.pe-text-in:focus {
+    outline: none;
+    border-color: #2f6bff;
+}
+.pe-text-in::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+.pe-text-reset {
+    flex: none;
+}
+.pe-chip-uploads {
+    margin: 2px 0 4px 12px;
+    padding-left: 10px;
+    border-left: 2px solid rgba(47, 107, 255, 0.5);
+}
+.pe-import-box {
+    padding: 10px 14px 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.pe-import-box .pe-btn[disabled] {
+    opacity: 0.6;
+    cursor: default;
+}
+
+/* 海报内可编辑元素：可点击跳转右侧面板 */
+.p-editable {
+    pointer-events: auto;
+    cursor: pointer;
+}
+.p-editable:hover {
+    outline: 2px solid rgba(47, 107, 255, 0.85);
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+.p-chip .p-editable:hover {
+    outline: none;
+    filter: drop-shadow(0 0 6px rgba(47, 107, 255, 0.9));
+}
+
+/* 右侧面板：点击海报后定位高亮 */
+.pe-flash {
+    animation: peFlash 1.7s ease;
+    border-radius: 10px;
+}
+@keyframes peFlash {
+    0%, 100% { box-shadow: none; background: transparent; }
+    12%, 55% {
+        box-shadow: 0 0 0 2px #2f6bff, 0 0 18px rgba(47, 107, 255, 0.55);
+        background: rgba(47, 107, 255, 0.14);
+    }
+}
+.pe-slot-row.pe-flash {
+    padding: 8px 10px;
+    margin: 0 -10px;
+}

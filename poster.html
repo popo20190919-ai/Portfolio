@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Store 投放模板工坊 — POSTER STUDIO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=Noto+Serif+SC:wght@600;900&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="poster.css?v=24">
+</head>
+<body>
+
+<!-- ===== 顶栏 ===== -->
+<header class="pe-top">
+    <div class="pe-top-left">
+        <span class="pe-logo">App Store 投放模板工坊</span>
+        <span class="pe-logo-en">POSTER STUDIO · 6.7inch</span>
+    </div>
+    <div class="pe-top-right">
+        <button class="pe-btn" id="btnReset" type="button">重置当前模板</button>
+        <button class="pe-btn pe-btn-primary" id="btnExport" type="button">导出 PNG · 1284×2778</button>
+    </div>
+</header>
+
+<div class="pe-body">
+
+    <!-- ===== 左栏：模板 / 素材 ===== -->
+    <aside class="pe-rail">
+        <div class="pe-rail-tabs">
+            <button class="pe-rail-tab on" id="tabTpl" type="button">模板</button>
+            <button class="pe-rail-tab" id="tabStk" type="button">素材库</button>
+        </div>
+        <div id="tplRail">
+            <div class="pe-rail-label">选择模板 / TEMPLATES</div>
+            <!-- 模板卡片由 JS 注入 -->
+        </div>
+        <div class="pe-import-box">
+            <button class="pe-btn pe-btn-block pe-btn-upload" id="btnImport" type="button">＋ 导入 SVG / PSD</button>
+            <p class="pe-tip">自动转成可编辑模板：文字可改、图片可换。文字需未转曲（SVG）/未合层（PSD）。</p>
+        </div>
+        <div id="stkRail" hidden>
+            <div class="pe-rail-label">点击素材添加到海报 / STICKERS</div>
+            <button class="pe-btn pe-btn-block pe-btn-upload" id="btnStkUpload" type="button">＋ 上传我的素材</button>
+            <p class="pe-tip pe-stk-tip">支持 PNG（建议透明底）/ JPG，可多选；素材保存在本浏览器，刷新不丢失。</p>
+            <div class="pe-stk-grid" id="stkGrid">
+                <!-- 素材由 JS 注入 -->
+            </div>
+        </div>
+    </aside>
+
+    <!-- ===== 中栏：预览舞台 ===== -->
+    <main class="pe-stage" id="stage">
+        <div class="pe-poster-wrap" id="posterWrap">
+            <!-- 海报由 JS 注入 -->
+        </div>
+        <div class="pe-stage-hint">点击人物 / 贴纸可拖动 · 滚轮缩放 · 左侧「素材库」点击添加花字装饰</div>
+    </main>
+
+    <!-- ===== 右栏：编辑面板 ===== -->
+    <aside class="pe-panel">
+
+        <section class="pe-sec">
+            <div class="pe-sec-label">文案内容 / COPY</div>
+            <label class="pe-field-label">主标题</label>
+            <input class="pe-input" id="inTitle" type="text" placeholder="主标题">
+            <label class="pe-field-label">副标题</label>
+            <input class="pe-input" id="inSub" type="text" placeholder="副标题">
+        </section>
+
+        <section class="pe-sec">
+            <div class="pe-sec-label">字体样式 / TYPE</div>
+            <label class="pe-field-label">字体</label>
+            <select class="pe-input" id="selFont"></select>
+            <label class="pe-field-label">主标题字号 <span id="valTitleSize" class="pe-val"></span></label>
+            <input class="pe-range" id="rngTitle" type="range" min="70" max="160" step="1">
+            <label class="pe-field-label">副标题字号 <span id="valSubSize" class="pe-val"></span></label>
+            <input class="pe-range" id="rngSub" type="range" min="30" max="96" step="1">
+            <label class="pe-field-label">文字颜色</label>
+            <div class="pe-swatches" id="textSwatches">
+                <button class="pe-swatch" data-color="#ffffff" style="background:#ffffff" title="白色"></button>
+                <button class="pe-swatch" data-color="#000000" style="background:#000000" title="黑色"></button>
+                <button class="pe-swatch" data-color="#ffd84d" style="background:#ffd84d" title="黄色"></button>
+                <button class="pe-swatch" data-color="#ff5a5a" style="background:#ff5a5a" title="红色"></button>
+                <button class="pe-swatch" data-color="#4de3c6" style="background:#4de3c6" title="青色"></button>
+                <input type="color" class="pe-color" id="pickColor" value="#ffffff" title="自定义颜色">
+            </div>
+        </section>
+
+        <section class="pe-sec">
+            <div class="pe-sec-label">海报背景 / POSTER BG</div>
+            <button class="pe-btn pe-btn-block" id="btnPosterBg" type="button">上传整张海报背景图</button>
+            <div class="pe-file-name" id="posterBgName">使用模板自带背景</div>
+            <label class="pe-field-label">底色（无背景图时生效）</label>
+            <div class="pe-swatches" id="posterSwatches">
+                <button class="pe-swatch" data-pcolor="#000000" style="background:#000000" title="黑色"></button>
+                <button class="pe-swatch" data-pcolor="#ffffff" style="background:#ffffff" title="白色"></button>
+                <button class="pe-swatch" data-pcolor="#10213f" style="background:#10213f" title="深蓝"></button>
+                <button class="pe-swatch" data-pcolor="#1c1337" style="background:#1c1337" title="深紫"></button>
+                <button class="pe-swatch" data-pcolor="#3a1d10" style="background:#3a1d10" title="深棕"></button>
+                <input type="color" class="pe-color" id="pickPosterColor" value="#000000" title="自定义底色">
+            </div>
+            <button class="pe-btn pe-btn-ghost pe-btn-block" id="btnBoardReset" type="button">恢复模板自带背景</button>
+        </section>
+
+        <section class="pe-sec">
+            <div class="pe-sec-label">手机画面 / SCREEN</div>
+            <button class="pe-btn pe-btn-block" id="btnBg" type="button">上传手机画面图片</button>
+            <div class="pe-file-name" id="bgName">未上传 · 使用 Figma 模板画面</div>
+            <p class="pe-tip">替换手机内的主画面区域，手机框、面板等界面元素保留。</p>
+            <button class="pe-btn pe-btn-ghost pe-btn-block" id="btnBgClear" type="button">移除上传画面</button>
+            <label class="pe-check"><input type="checkbox" id="chkUi" checked> 显示手机界面元素（边框 / 面板）</label>
+        </section>
+
+        <section class="pe-sec" id="slotSec" hidden>
+            <div class="pe-sec-label">界面小图 / UI PHOTO</div>
+            <p class="pe-tip">替换界面里悬浮头像卡、圆形角色头像等小图片，位置与框体自动对齐。</p>
+            <div id="slotList"></div>
+        </section>
+
+        <section class="pe-sec">
+            <div class="pe-sec-label">人物图片 / PERSON</div>
+            <button class="pe-btn pe-btn-block" id="btnPerson" type="button">添加人物图片</button>
+            <p class="pe-tip">上传后在海报上直接拖动定位；支持添加多张。花字装饰请从左栏「素材库」添加。</p>
+        </section>
+
+        <section class="pe-sec pe-sec-foot" id="elCtl" hidden>
+            <div class="pe-sec-label">选中元素 / LAYER</div>
+            <label class="pe-field-label" id="elName">元素大小 <span id="valElSize" class="pe-val"></span></label>
+            <input class="pe-range" id="rngEl" type="range" min="60" max="1200" step="2">
+            <label class="pe-field-label">旋转角度 <span id="valRot" class="pe-val"></span></label>
+            <input class="pe-range" id="rngRot" type="range" min="-180" max="180" step="1" value="0">
+            <div class="pe-btn-row">
+                <button class="pe-btn pe-btn-sm" id="btnRotL" type="button">⟲ 左转 90°</button>
+                <button class="pe-btn pe-btn-sm" id="btnRotR" type="button">右转 90° ⟳</button>
+            </div>
+            <div class="pe-btn-row">
+                <button class="pe-btn pe-btn-sm pe-btn-toggle" id="btnFlipH" type="button">⇋ 水平翻转</button>
+                <button class="pe-btn pe-btn-sm pe-btn-toggle" id="btnFlipV" type="button">⇵ 垂直翻转</button>
+            </div>
+            <button class="pe-btn pe-btn-ghost pe-btn-block" id="btnElResetTf" type="button">重置变换</button>
+            <button class="pe-btn pe-btn-ghost pe-btn-block" id="btnElDel" type="button">删除选中元素</button>
+        </section>
+
+        <section class="pe-sec pe-sec-foot">
+            <p class="pe-tip">导出为 1284×2778 PNG，可直接用于 App Store 6.7 英寸截图位。</p>
+        </section>
+
+    </aside>
+</div>
+
+<input type="file" id="filePosterBg" accept="image/*" hidden>
+<input type="file" id="fileBg" accept="image/*" hidden>
+<input type="file" id="fileSlot" accept="image/*" hidden>
+<input type="file" id="filePerson" accept="image/*" hidden>
+<input type="file" id="fileSticker" accept="image/*" multiple hidden>
+<input type="file" id="fileImport" accept=".svg,.psd,image/svg+xml" hidden>
+<div id="exportHost"></div>
+
+<script src="poster-data.js?v=24"></script>
+<script src="poster.js?v=24"></script>
+<script src="poster-import.js?v=24"></script>
+</body>
+</html>

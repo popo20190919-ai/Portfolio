@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生成工作室 — FIGURE ATELIER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Covered+By+Your+Grace&family=Inter:wght@400;500;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="studio.css?v=11">
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+    <!-- ===== 顶栏 ===== -->
+    <a class="nav-logo" href="atelier.html" aria-label="返回首页 FIGURE ATELIER"><img src="images/figma-home/nav_logo.png" alt="FIGURE ATELIER"></a>
+    <a class="nav-link" style="left:1539px" href="atelier.html#people">人物形象</a>
+    <a class="nav-link" style="left:1655.5px" href="atelier.html#accessories">饰品</a>
+    <a class="nav-link" style="left:1737.8px" href="atelier.html#accessories">造型库</a>
+    <a class="nav-link" style="left:1831px" href="#" id="navMine">我的生成</a>
+    <div class="nav-line"></div>
+
+    <!-- ===== 左栏：人物信息 / 搭配 / 提示 ===== -->
+    <section class="panel-card left-card">
+        <div class="lp-label" style="top:30.1px">当前人物/IDENTITY</div>
+        <span class="lp-no" id="lookNo">C4</span>
+        <div class="lp-name" id="lookName">球衣墨镜</div>
+        <div class="lp-en" id="lookEn">JERSEY SHADES</div>
+        <p class="lp-desc" id="lookDesc" style="top:165.1px"></p>
+        <div class="upload-desc-wrap" id="uploadDescWrap" hidden>
+          <textarea class="upload-desc" id="uploadDesc" placeholder="点右下角「✨ AI 识别描述」自动复制照片，粘贴到 TRAE 对话框发给 AI，再把回复的描述粘贴到这里&#10;也可自己写，例：齐肩黑发、圆脸；白色宽松T恤、浅蓝牛仔裤、白色运动鞋"></textarea>
+          <button class="ai-desc-btn" id="aiDescBtn" type="button" title="一键复制照片：粘贴到 TRAE 对话框发给 AI，再把 AI 回复的描述粘贴回本框">✨ AI 识别描述</button>
+        </div>
+
+        <div class="lp-hr" style="top:220px"></div>
+        <div class="lp-label" style="top:238px">当前搭配/STYLING</div>
+        <div class="chip-row" id="chipRow"></div>
+
+        <div class="lp-hr" style="top:427px"></div>
+        <div class="lp-label" style="top:445px">身份锁定/IDENTITYLOCK</div>
+        <p class="lp-desc" style="top:494px;width:365px">生成时以「人物」身份母图为准:同一人物换装、换动作,面部与发型保持一致。换一个人物=换一张身份母图。</p>
+
+        <div class="lp-hr" style="top:551px"></div>
+        <div class="lp-label" style="top:570px">生成提示/PROMPT</div>
+        <textarea class="prompt-input" id="promptInput" placeholder="补充要求,例:红色长裙、街头感、"></textarea>
+        <svg class="prompt-arrow" width="18" height="19" viewBox="0 0 18 19" fill="none">
+            <path d="M2 16.5 L15.5 3" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round"/>
+            <path d="M7.5 3 H15.5 V11" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </section>
+
+    <!-- ===== 中栏：生成区 ===== -->
+    <section class="panel-card stage-card">
+        <div class="stage-tag">生成区域</div>
+        <div class="stage-img-wrap">
+            <img class="stage-img" id="stageImg" src="" alt="当前人物造型">
+        </div>
+
+        <div class="stage-overlay" id="overlay">
+            <div class="scan-frame">
+                <div class="scan-line"></div>
+            </div>
+            <div class="gen-label">
+                GENERATING
+                <span class="cn" id="genCn">人物换装生成中…</span>
+            </div>
+        </div>
+
+        <div class="history-bar" id="historyBar"></div>
+
+        <a class="cut-dl-btn" id="cutDlBtn" hidden href="#" download="figure-cutout.png">↓ 下载抠底 PNG</a>
+
+        <div class="svc-warn" id="svcWarn" hidden>
+            <div class="svc-warn-title">图片服务不可用 / SERVICE UNAVAILABLE</div>
+            <div id="svcWarnBody">
+                当前浏览器无法访问 AI 图片生成服务。<br>
+                请在 <b>TRAE 内置浏览器 / 预览</b> 中打开 <b>localhost:8923/studio.html</b> 使用生成功能。
+            </div>
+        </div>
+    </section>
+
+    <button class="act-btn gen-btn" id="genBtn" type="button">生成造型</button>
+    <button class="act-btn reset-btn" id="resetBtn" type="button">重置</button>
+
+    <!-- ===== 右栏：资源库 ===== -->
+    <section class="panel-card right-card">
+        <div class="lib-tabs" id="libTabs">
+            <button class="lib-tab" style="left:24px" data-tab="person" type="button">人物</button>
+            <button class="lib-tab" style="left:91px" data-tab="top" type="button">上装</button>
+            <button class="lib-tab" style="left:158px" data-tab="bottom" type="button">下装</button>
+            <button class="lib-tab" style="left:225px" data-tab="shoes" type="button">鞋子</button>
+            <button class="lib-tab" style="left:292px" data-tab="accessory" type="button">饰品</button>
+            <button class="lib-tab" style="left:359px" data-tab="pose" type="button">动作</button>
+        </div>
+        <button class="lib-upload-btn" id="libUploadBtn" type="button">+上传参考图</button>
+        <input type="file" id="libFileInput" accept="image/*" multiple hidden>
+        <div class="lib-grid" id="libGrid"></div>
+    </section>
+
+</div>
+
+<script src="atelier-data.js?v=9"></script>
+<script src="studio.js?v=23"></script>
+<script>
+    (function () {
+        var DESIGN_W = 1920, DESIGN_H = 1002;
+        function fit() {
+            var s = Math.min(window.innerWidth / DESIGN_W, window.innerHeight / DESIGN_H, 1);
+            var stage = document.getElementById('stage');
+            stage.style.transform = 'translate(-50%, -50%) scale(' + s + ')';
+            stage.style.left = '50%';
+            stage.style.top = '50%';
+            stage.style.marginLeft = '0';
+        }
+        window.addEventListener('resize', fit);
+        fit();
+    })();
+</script>
+</body>
+</html>

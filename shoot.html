@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>WAIT</title>
+<style>
+    html, body { margin: 0; padding: 0; background: #ffffff; }
+    body { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    #shot { display: block; height: 74vh; width: auto; }
+</style>
+</head>
+<body>
+<img id="shot" alt="">
+<script src="atelier-data.js?v=6"></script>
+<script>
+(function () {
+    const ROSTER = [
+        ...CAST.map((c) => ({ id: c.id, img: c.img })),
+        ...LOOKS.map((l) => ({ id: l.id, img: l.img }))
+    ];
+    const params = new URLSearchParams(location.search);
+    const customPrompt = params.get('prompt');
+    const item = customPrompt
+        ? { id: params.get('id') || 'CUSTOM', img: IMG(customPrompt, 'portrait_4_3') }
+        : ROSTER[parseInt(params.get('i') || '0', 10)];
+    document.title = 'WAIT ' + item.id;
+    const img = document.getElementById('shot');
+    let tries = 0;
+
+    function load() {
+        const sep = item.img.indexOf('?') === -1 ? '?' : '&';
+        img.onload = () => {
+            if (img.naturalWidth >= 1800 && tries < 10) {
+                tries += 1;
+                document.title = 'WAIT ' + item.id + ' retry' + tries;
+                setTimeout(load, 3500);
+            } else {
+                document.title = 'READY ' + item.id + ' ' + img.naturalWidth + 'x' + img.naturalHeight;
+            }
+        };
+        img.onerror = () => { document.title = 'ERROR ' + item.id; };
+        img.src = item.img + sep + '_shoot=' + tries;
+    }
+    load();
+})();
+</script>
+</body>
+</html>

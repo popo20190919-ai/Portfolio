@@ -1,0 +1,460 @@
+/* ===== FIGURE ATELIER 首页 · Figma《网页设计》1:1 还原 ===== */
+:root {
+    --acid: #DBFE01;
+    --acid-block: #DEFF0F;
+    --lime-foot: #D9F036;
+    --pink: #FF007F;
+    --pink-2: #FF20A5;
+    --ink: #000000;
+    --paper: #FFFFFF;
+    --grey-strip: #F3F3F3;
+    --grey-pill: #404040;
+    --grey-note: #5C5C5C;
+    --font-hand: 'Covered By Your Grace', 'PingFang SC', cursive;
+    --font-pixel: 'Silkscreen', 'PingFang SC', monospace;
+    --font-sans: 'PingFang SC', 'Hiragino Sans GB', -apple-system, 'Hiragino Kaku Gothic Pro', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    letter-spacing: -0.09em;
+    -webkit-font-smoothing: antialiased;
+}
+
+a { text-decoration: none; color: inherit; }
+img { display: block; }
+
+/* ===== 1920 画布 · 等比缩放 ===== */
+.stage {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.canvas {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    margin-left: -960px;
+    width: 1920px;
+    height: 5258px;
+    transform-origin: center top;
+    background: var(--paper);
+    overflow: hidden;
+}
+
+/* ===== 顶部导航 ===== */
+.nav-line {
+    position: absolute;
+    left: 0;
+    top: 62px;
+    width: 1920px;
+    height: 1px;
+    background: var(--ink);
+    z-index: 20;
+}
+
+.nav-logo-img {
+    position: absolute;
+    left: 817px;
+    top: 9px;
+    width: 285.5px;
+    height: 43px;
+    z-index: 20;
+}
+
+.nav-link {
+    position: absolute;
+    top: 18px;
+    font-family: var(--font-sans);
+    font-size: 18.5px;
+    line-height: 1.4;
+    color: var(--ink);
+    z-index: 20;
+    white-space: nowrap;
+}
+
+.nav-link:hover { color: var(--pink); }
+
+/* ===== Hero ===== */
+.hero-acid-block {
+    position: absolute;
+    left: 992px;
+    top: 202px;
+    width: 165px;
+    height: 180px;
+    background: var(--acid-block);
+    border: 1px solid var(--ink);
+    z-index: 1;
+}
+
+.hero-model {
+    position: absolute;
+    z-index: 2;
+}
+
+.hero-model img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
+.hero-model:hover { filter: drop-shadow(0 6px 0 rgba(0,0,0,.08)); }
+
+/* 标注框 */
+.callout-box {
+    position: absolute;
+    border: 1px solid var(--ink);
+    z-index: 3;
+}
+
+.callout-item {
+    position: absolute;
+    z-index: 4;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
+.callout-dot {
+    position: absolute;
+    left: 781px;
+    top: 689px;
+    width: 8px;
+    height: 8px;
+    background: #111111;
+    border-radius: 50%;
+    z-index: 4;
+}
+
+.callout-img {
+    position: absolute;
+    z-index: 4;
+}
+
+.note {
+    position: absolute;
+    font-family: var(--font-pixel);
+    font-size: 19px;
+    line-height: 1.35;
+    color: var(--ink);
+    z-index: 4;
+    font-weight: 400;
+}
+
+.note.small {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    line-height: 1.55;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.note.cn {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.2;
+    font-weight: 400;
+}
+
+.tag-img {
+    position: absolute;
+    z-index: 4;
+}
+
+.hero-watermark {
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-sub {
+    position: absolute;
+    left: 576px;
+    top: 984px;
+    width: 768px;
+    text-align: center;
+    font-family: 'Inter', var(--font-sans);
+    font-size: 19.6px;
+    line-height: 1.2;
+    font-weight: 400;
+    color: #929292;
+    z-index: 4;
+}
+
+/* 圆形箭头 */
+.hero-arrow {
+    position: absolute;
+    width: 65px;
+    height: 65px;
+    z-index: 6;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.hero-arrow img { width: 100%; height: 100%; }
+.hero-arrow:hover { opacity: .55; }
+
+/* 手绘签名 */
+.hero-scribble {
+    position: absolute;
+    left: 1553px;
+    top: 925px;
+    width: 272px;
+    height: 60px;
+    z-index: 4;
+}
+
+/* 立即生成 / 上传 药丸 */
+.pill {
+    position: absolute;
+    left: 722px;
+    top: 884px;
+    width: 477px;
+    height: 87px;
+    background: var(--grey-pill);
+    border-radius: 43.5px;
+    z-index: 8;
+}
+
+.pill a {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 26.5px;
+    border-radius: 32.5px;
+    transition: filter .15s;
+}
+
+.pill-gen {
+    left: 17px;
+    top: 11px;
+    width: 315px;
+    height: 65px;
+    background: var(--acid);
+    color: var(--ink);
+}
+
+.pill-up {
+    left: 332px;
+    top: 14px;
+    width: 130px;
+    height: 59px;
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 29.5px !important;
+    font-size: 24px !important;
+}
+
+.pill a:hover { filter: brightness(1.06); }
+
+/* ===== 区块标题 ===== */
+.sec-marker {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    z-index: 1;
+}
+
+.sec-title {
+    position: absolute;
+    font-family: var(--font-hand);
+    font-size: 47.3px;
+    line-height: 1.35;
+    color: var(--ink);
+    z-index: 2;
+}
+
+.sec-subtitle {
+    position: absolute;
+    font-family: var(--font-hand);
+    font-size: 42.3px;
+    line-height: 1.35;
+    color: var(--ink);
+    z-index: 2;
+    white-space: nowrap;
+}
+
+.sec-title-img {
+    position: absolute;
+    z-index: 2;
+}
+
+.sec-chevron {
+    position: absolute;
+    z-index: 3;
+    cursor: pointer;
+}
+
+.sec-chevron:hover { opacity: .5; }
+
+/* ===== 人物库 / 饰品库 卡片 ===== */
+.p-card {
+    position: absolute;
+    width: 392px;
+    height: 471px;
+    z-index: 2;
+}
+
+.p-card-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 392px;
+    height: 471px;
+    background: var(--acid);
+    border: 1px solid #9F9F9F;
+    border-radius: 34px;
+}
+
+.p-card-img {
+    position: absolute;
+    top: -27px;
+    width: 367px;
+    height: 435px;
+    object-fit: fill;
+    z-index: 1;
+}
+
+.p-card-hole {
+    position: absolute;
+    width: 49px;
+    height: 49px;
+    background: var(--paper);
+    border: 1px solid #959595;
+    border-radius: 50%;
+    z-index: 3;
+}
+
+.p-card-heart {
+    position: absolute;
+    z-index: 4;
+}
+
+.p-card-foot {
+    position: absolute;
+    left: 0;
+    top: 407px;
+    width: 392px;
+    height: 64px;
+    background: var(--grey-strip);
+    border: 1px solid #828282;
+    border-radius: 0 0 32px 32px;
+    z-index: 2;
+}
+
+.p-card-name {
+    position: absolute;
+    left: 27px;
+    top: 418px;
+    font-family: 'Inter', var(--font-sans);
+    font-size: 31px;
+    line-height: 1.22;
+    font-weight: 400;
+    color: var(--ink);
+    z-index: 4;
+}
+
+.p-card-no {
+    position: absolute;
+    top: 387px;
+    height: 35px;
+    width: auto;
+    z-index: 4;
+}
+
+.p-card:hover .p-card-bg { background: #c8ec00; }
+
+.p-card.grey .p-card-bg { background: #DDDDDD; }
+.p-card.grey:hover .p-card-bg { background: #cfcfcf; }
+
+/* ===== 案例 ===== */
+.case-img {
+    position: absolute;
+    z-index: 2;
+    overflow: hidden;
+}
+
+.case-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.case-img:hover { opacity: .92; }
+
+/* ===== CTA 行动条 ===== */
+.cta-band {
+    position: absolute;
+    left: 117px;
+    top: 4162px;
+    width: 1625px;
+    height: 288px;
+    background: #3D3D3D;
+    border-radius: 48px;
+    z-index: 2;
+}
+
+.cta-band:hover { background: #4a4a4a; }
+
+.cta-text-img {
+    position: absolute;
+    left: 181px;
+    top: 4235px;
+    width: 402.5px;
+    height: 145.5px;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.cta-circle {
+    position: absolute;
+    left: 1523px;
+    top: 4225px;
+    width: 163px;
+    height: 163px;
+    background: #E4FF29;
+    border: 13px solid #FF1D9D;
+    border-radius: 50%;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.cta-arrow {
+    position: absolute;
+    left: 1571.5px;
+    top: 4286px;
+    width: 57.5px;
+    height: 40.5px;
+    z-index: 4;
+    pointer-events: none;
+}
+
+/* ===== 页脚 ===== */
+.foot-line {
+    position: absolute;
+    left: -34px;
+    top: 4634px;
+    width: 1955px;
+    height: 1px;
+    background: var(--ink);
+    z-index: 1;
+}
+
+.foot-img {
+    position: absolute;
+    left: 0;
+    top: 4674px;
+    width: 1920px;
+    height: 584px;
+    z-index: 1;
+}

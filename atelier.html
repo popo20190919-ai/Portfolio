@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人形换装工作室 — FIGURE ATELIER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Covered+By+Your+Grace&family=Silkscreen:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="home.css?v=8">
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div class="canvas" id="canvas">
+
+    <!-- ===== Hero 背景水印 ===== -->
+    <img class="hero-watermark" src="images/figma-home/hero_watermark.png" style="left:78px;top:108px;width:1795.5px;height:312.5px" alt="">
+
+    <!-- ===== 顶部导航 ===== -->
+    <div class="nav-line"></div>
+    <a class="nav-link" style="left:31px" href="#people">人物形象</a>
+    <a class="nav-link" style="left:147px" href="#accessories">饰品</a>
+    <a class="nav-link" style="left:229px" href="studio.html?lib=outfit">造型库</a>
+    <img class="nav-logo-img" src="images/figma-home/nav_logo.png" alt="FIGURE ATELIER">
+    <a class="nav-link" style="left:1831px" href="studio.html">我的生成</a>
+
+    <!-- ===== Hero ===== -->
+    <div class="hero-acid-block"></div>
+
+    <a class="hero-model" style="left:125px;top:110px;width:313px;height:895px" href="studio.html?look=C1">
+      <img src="images/figma-home/hero_1.png" alt="人物形象 1">
+    </a>
+    <a class="hero-model" style="left:431px;top:58px;width:319px;height:912px" href="studio.html?look=C3">
+      <img src="images/figma-home/hero_2.png" alt="人物形象 2">
+    </a>
+    <a class="hero-model" style="left:816px;top:48px;width:301px;height:862px" href="studio.html?look=C5">
+      <img src="images/figma-home/hero_3.png" alt="人物形象 3">
+    </a>
+    <a class="hero-model" style="left:1210px;top:180px;width:281px;height:802px" href="studio.html?look=C4">
+      <img src="images/figma-home/hero_4.png" alt="人物形象 4">
+    </a>
+    <a class="hero-model" style="left:1518px;top:124px;width:262px;height:771px" href="studio.html?look=C2">
+      <img src="images/figma-home/hero_5.png" alt="人物形象 5">
+    </a>
+
+    <!-- 装饰标签图 -->
+    <img class="tag-img" style="left:1737px;top:92px;width:148px;height:104.5px" src="images/figma-home/tag_right_top.png" alt="">
+    <img class="tag-img" style="left:52px;top:790px;width:132px;height:116px" src="images/figma-home/tag_left_bottom.png" alt="">
+
+    <!-- 标注：衣服 -->
+    <span class="callout-dot" style="left:993px;top:403px"></span>
+    <p class="note cn" style="left:1009px;top:398px">衣服</p>
+    <p class="note small" style="left:1012px;top:420px;width:145px">Your exclusive library of signature styles</p>
+
+    <!-- 标注：裤子（长裤框） -->
+    <div class="callout-box" style="left:785px;top:434px;width:132px;height:208px;background:#EBEBEB">
+      <img class="callout-item" style="left:21px;top:5px;width:89.7px;height:192px" src="images/figma-home/acc_long.png" alt="裤子">
+    </div>
+    <span class="callout-dot" style="left:781px;top:650px"></span>
+    <p class="note cn" style="left:793px;top:650px">裤子</p>
+    <p class="note small" style="left:796px;top:672px;width:145px">Your exclusive library of signature styles</p>
+
+    <!-- 标注：鞋子（高跟框） -->
+    <div class="callout-box" style="left:1005px;top:622px;width:132px;height:132px;background:#D9D9D9">
+      <img class="callout-item" style="left:17px;top:15px;width:99px;height:101px" src="images/figma-home/acc_square.png" alt="鞋子">
+    </div>
+    <span class="callout-dot" style="left:1005px;top:767px"></span>
+    <p class="note cn" style="left:1022px;top:764px">鞋子</p>
+    <p class="note small" style="left:1025px;top:786px;width:145px">Your exclusive library of signature styles</p>
+
+    <!-- 圆形切换箭头 -->
+    <button class="hero-arrow" style="left:30px;top:543px" aria-label="上一位"><img src="images/webdesign/arrow-left.svg" alt=""></button>
+    <button class="hero-arrow" style="left:1820px;top:493px" aria-label="下一位"><img src="images/webdesign/arrow-right.svg" alt=""></button>
+
+    <!-- 手绘签名 -->
+    <img class="hero-scribble" src="images/figma-home/hero_sign.svg" alt="FIGURE ATELIER">
+
+    <!-- 立即生成 / 上传 -->
+    <div class="pill">
+      <a class="pill-gen" href="studio.html">立即生成</a>
+      <a class="pill-up" href="studio.html">上传</a>
+    </div>
+
+    <!-- 副标题 -->
+    <p class="hero-sub">选择人物形象,从资源库搭配服装、鞋子、饰品与动作,或上传参考图直接生成全新造型。</p>
+
+    <!-- ===== 人物库 ===== -->
+    <img class="sec-title-img" id="people" src="images/figma-home/title_people.png" style="left:131px;top:1195px;width:245.5px;height:99px" alt="人物库 People Database">
+    <svg class="sec-chevron" style="left:1673px;top:1271px" width="16" height="23" viewBox="0 0 16 23"><path d="M14 2L3 11.5L14 21" fill="none" stroke="#D4D4D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg class="sec-chevron" style="left:1721px;top:1271px" width="16" height="23" viewBox="0 0 16 23"><path d="M2 2L13 11.5L2 21" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+    <a class="p-card" style="left:130px;top:1345.1px" href="studio.html?look=C1">
+      <span class="p-card-bg"></span>
+      <img class="p-card-img" style="left:0" src="images/figma-home/card_1.png" alt="人物1">
+      <span class="p-card-hole" style="left:329px;top:14px"></span>
+      <svg class="p-card-heart" style="left:342.7px;top:27.7px" width="20.6" height="16.7" viewBox="0 0 22 18"><path d="M11 16.2C11 16.2 2.8 11.2 2.8 6.1C2.8 3.6 4.7 1.9 7 1.9C8.6 1.9 10.1 2.9 11 4.5C11.9 2.9 13.4 1.9 15 1.9C17.3 1.9 19.2 3.6 19.2 6.1C19.2 11.2 11 16.2 11 16.2Z" fill="#FF007F" stroke="#FDA3C6" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <span class="p-card-foot"></span>
+      <span class="p-card-name" style="left:27px">人物1</span>
+      <img class="p-card-no" style="left:329px;width:48.4px" src="images/figma-home/num_p_01.svg" alt="01">
+    </a>
+    <a class="p-card" style="left:543px;top:1345.1px" href="studio.html?look=C3">
+      <span class="p-card-bg"></span>
+      <img class="p-card-img" style="left:0" src="images/figma-home/card_2.png" alt="人物2">
+      <span class="p-card-hole" style="left:325px;top:14px"></span>
+      <svg class="p-card-heart" style="left:339.7px;top:27.7px" width="20.6" height="16.7" viewBox="0 0 22 18"><path d="M11 16.2C11 16.2 2.8 11.2 2.8 6.1C2.8 3.6 4.7 1.9 7 1.9C8.6 1.9 10.1 2.9 11 4.5C11.9 2.9 13.4 1.9 15 1.9C17.3 1.9 19.2 3.6 19.2 6.1C19.2 11.2 11 16.2 11 16.2Z" fill="none" stroke="#000000" stroke-width="2" stroke-linejoin="round"/></svg>
+      <span class="p-card-foot"></span>
+      <span class="p-card-name" style="left:19px">人物2</span>
+      <img class="p-card-no" style="left:321px;width:60.1px" src="images/figma-home/num_p_02.svg" alt="02">
+    </a>
+    <a class="p-card" style="left:961px;top:1345.1px" href="studio.html?look=C5">
+      <span class="p-card-bg"></span>
+      <img class="p-card-img" style="left:12px" src="images/figma-home/card_3.png" alt="人物3">
+      <span class="p-card-hole" style="left:320px;top:14px"></span>
+      <svg class="p-card-heart" style="left:334.7px;top:27.7px" width="20.6" height="16.7" viewBox="0 0 22 18"><path d="M11 16.2C11 16.2 2.8 11.2 2.8 6.1C2.8 3.6 4.7 1.9 7 1.9C8.6 1.9 10.1 2.9 11 4.5C11.9 2.9 13.4 1.9 15 1.9C17.3 1.9 19.2 3.6 19.2 6.1C19.2 11.2 11 16.2 11 16.2Z" fill="none" stroke="#000000" stroke-width="2" stroke-linejoin="round"/></svg>
+      <span class="p-card-foot"></span>
+      <span class="p-card-name" style="left:25px">人物3</span>
+      <img class="p-card-no" style="left:320px;width:60.1px" src="images/figma-home/num_p_03.svg" alt="03">
+    </a>
+    <a class="p-card" style="left:1373px;top:1345.1px" href="studio.html?look=C4">
+      <span class="p-card-bg"></span>
+      <img class="p-card-img" style="left:16px" src="images/figma-home/card_4.png" alt="人物4">
+      <span class="p-card-hole" style="left:330px;top:14px"></span>
+      <svg class="p-card-heart" style="left:344.7px;top:27.7px" width="20.6" height="16.7" viewBox="0 0 22 18"><path d="M11 16.2C11 16.2 2.8 11.2 2.8 6.1C2.8 3.6 4.7 1.9 7 1.9C8.6 1.9 10.1 2.9 11 4.5C11.9 2.9 13.4 1.9 15 1.9C17.3 1.9 19.2 3.6 19.2 6.1C19.2 11.2 11 16.2 11 16.2Z" fill="none" stroke="#000000" stroke-width="2" stroke-linejoin="round"/></svg>
+      <span class="p-card-foot"></span>
+      <span class="p-card-name" style="left:20px">人物4</span>
+      <img class="p-card-no" style="left:320px;width:60.1px" src="images/figma-home/num_p_04.svg" alt="04">
+    </a>
+
+    <!-- ===== 服装饰品库 ===== -->
+    <img class="sec-title-img" id="accessories" src="images/figma-home/title_accessory.png" style="left:131px;top:2020px;width:245.5px;height:99px" alt="服装饰品库">
+    <svg class="sec-chevron" style="left:1673px;top:2096px" width="16" height="23" viewBox="0 0 16 23"><path d="M14 2L3 11.5L14 21" fill="none" stroke="#D4D4D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg class="sec-chevron" style="left:1721px;top:2096px" width="16" height="23" viewBox="0 0 16 23"><path d="M2 2L13 11.5L2 21" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+    <a class="p-card grey" style="left:130px;top:2168.1px" href="studio.html?lib=outfit">
+      <span class="p-card-bg"></span>
+      <img class="p-card-img" style="left:27px;top:35.9px;width:337px;height:399px;object-fit:fill" src="images/figma-home/cloth_1.png" alt="上衣">
+      <span class="p-card-hole" style="left:329px;top:13.9px"></span>
+      <svg class="p-card-heart" style="left:342.7px;top:27.7px" width="20.6" height="16.7" viewBox="0 0 22 18"><path d="M11 16.2C11 16.2 2.8 11.2 2.8 6.1C2.8 3.6 4.7 1.9 7 1.9C8.6 1.9 10.1 2.9 11 4.5C11.9 2.9 13.4 1.9 15 1.9C17.3 1.9 19.2 3.6 19.2 6.1C19.2 11.2 11 16.2 11 16.2Z" fill="#FF007F" stroke="#FDA3C6" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <span class="p-card-foot"></span>
+      <span class="p-card-name" style="left:27px">上衣</span>
+      <img class="p-card-no" style="left:336px;width:48.4px" src="images/figma-home/num_g_01.svg" alt="01">
+    </a>
+    <a class="p-card grey" style="left:543px;top:2168.1px" href="studio.html?lib=outfit">
+      <span class="p-card-bg"></span>
+      <img class="p-card-img" style="left:30px;top:49.9px;width:344.6px;height:324px;object-fit:fill" src="images/figma-home/cloth_2_mask.png" alt="上衣">
+      <span class="p-card-hole" style="left:325px;top:13.9px"></span>
+      <svg class="p-card-heart" style="left:339.7px;top:27.7px" width="20.6" height="16.7" viewBox="0 0 22 18"><path d="M11 16.2C11 16.2 2.8 11.2 2.8 6.1C2.8 3.6 4.7 1.9 7 1.9C8.6 1.9 10.1 2.9 11 4.5C11.9 2.9 13.4 1.9 15 1.9C17.3 1.9 19.2 3.6 19.2 6.1C19.2 11.2 11 16.2 11 16.2Z" fill="none" stroke="#000000" stroke-width="2" stroke-linejoin="round"/></svg>
+      <span class="p-card-foot"></span>
+      <span class="p-card-name" style="left:19px">上衣</span>
+      <img class="p-card-no" style="left:321px;width:60.1px" src="images/figma-home/num_g_02.svg" alt="02">
+    </a>
+    <a class="p-card grey" style="left:961px;top:2168.1px" href="studio.html?lib=accessory">
+      <span class="p-card-bg"></span>
+      <img class="p-card-img" style="left:2px;top:27.9px;width:367px;height:330px;object-fit:fill" src="images/figma-home/cloth_3.png" alt="帽子">
+      <span class="p-card-hole" style="left:320px;top:13.9px"></span>
+      <svg class="p-card-heart" style="left:334.7px;top:27.7px" width="20.6" height="16.7" viewBox="0 0 22 18"><path d="M11 16.2C11 16.2 2.8 11.2 2.8 6.1C2.8 3.6 4.7 1.9 7 1.9C8.6 1.9 10.1 2.9 11 4.5C11.9 2.9 13.4 1.9 15 1.9C17.3 1.9 19.2 3.6 19.2 6.1C19.2 11.2 11 16.2 11 16.2Z" fill="none" stroke="#000000" stroke-width="2" stroke-linejoin="round"/></svg>
+      <span class="p-card-foot"></span>
+      <span class="p-card-name" style="left:25px">帽子</span>
+      <img class="p-card-no" style="left:320px;width:60.1px" src="images/figma-home/num_g_03.svg" alt="03">
+    </a>
+    <a class="p-card grey" style="left:1373px;top:2168.1px" href="studio.html?lib=accessory">
+      <span class="p-card-bg"></span>
+      <img class="p-card-img" style="left:78px;top:27.9px;width:238px;height:368px;object-fit:fill" src="images/figma-home/cloth_4.png" alt="鞋子">
+      <span class="p-card-hole" style="left:330px;top:13.9px"></span>
+      <svg class="p-card-heart" style="left:344.7px;top:27.7px" width="20.6" height="16.7" viewBox="0 0 22 18"><path d="M11 16.2C11 16.2 2.8 11.2 2.8 6.1C2.8 3.6 4.7 1.9 7 1.9C8.6 1.9 10.1 2.9 11 4.5C11.9 2.9 13.4 1.9 15 1.9C17.3 1.9 19.2 3.6 19.2 6.1C19.2 11.2 11 16.2 11 16.2Z" fill="none" stroke="#000000" stroke-width="2" stroke-linejoin="round"/></svg>
+      <span class="p-card-foot"></span>
+      <span class="p-card-name" style="left:20px">鞋子</span>
+      <img class="p-card-no" style="left:320px;width:60.1px" src="images/figma-home/num_g_04.svg" alt="04">
+    </a>
+
+    <!-- ===== 案例 ===== -->
+    <img class="sec-marker" src="images/webdesign/marker-square-3.svg" style="left:137px;top:2892px" alt="">
+    <h2 class="sec-title" style="left:141px;top:2897px">案例</h2>
+    <p class="sec-subtitle" style="left:144px;top:2947px">CASE STUDY LIBRARY</p>
+
+    <a class="case-img" style="left:117px;top:3023px;width:1080px;height:1055px;border-radius:61px" href="studio.html">
+      <img src="images/figma-home/case_big.png" alt="案例：室内造型">
+    </a>
+    <a class="case-img" style="left:1197px;top:3023px;width:541px;height:528px;border-radius:36px" href="studio.html">
+      <img src="images/figma-home/case_s1.png" alt="案例：贴纸拼贴 1">
+    </a>
+    <a class="case-img" style="left:1197px;top:3550px;width:541px;height:528px;border-radius:36px" href="studio.html">
+      <img src="images/figma-home/case_s2.png" alt="案例：贴纸拼贴 2">
+    </a>
+
+    <!-- ===== CTA 行动条 ===== -->
+    <a class="cta-band" href="studio.html" aria-label="立即生成"></a>
+    <img class="cta-text-img" src="images/figma-home/cta_text.png" alt="选择你喜爱的服装动作，让人物活起来吧～">
+    <span class="cta-circle"></span>
+    <svg class="cta-arrow" width="57.5" height="40.5" viewBox="0 0 57.5 40.5"><path d="M1 20.25 H44 M43 1.5 L56.5 20.25 L43 39" fill="none" stroke="#6E6E6E" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+    <!-- ===== 页脚 ===== -->
+    <div class="foot-line"></div>
+    <img class="foot-img" src="images/figma-home/footer_full.png" alt="FIGURE ATELIER — Your exclusive library of signature styles">
+
+  </div>
+</div>
+
+<script>
+(function () {
+    var stage = document.getElementById('stage');
+    var canvas = document.getElementById('canvas');
+    var DESIGN_W = 1920;
+    var DESIGN_H = 5258;
+    function fit() {
+        var s = Math.min(1, window.innerWidth / DESIGN_W);
+        canvas.style.transform = 'scale(' + s + ')';
+        stage.style.height = (DESIGN_H * s) + 'px';
+        return s;
+    }
+    window.addEventListener('resize', fit);
+    fit();
+
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+            var target = document.querySelector(a.getAttribute('href'));
+            if (!target) return;
+            e.preventDefault();
+            var s = Math.min(1, window.innerWidth / DESIGN_W);
+            window.scrollTo({ top: target.offsetTop * s - 10 * s, behavior: 'smooth' });
+        });
+    });
+})();
+</script>
+
+</body>
+</html>
