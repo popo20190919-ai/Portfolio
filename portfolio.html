@@ -94,6 +94,25 @@ body.detail-on .detail-panel{opacity:1;transform:none}
 #flowerLayer{position:absolute;left:0;top:0;width:100%;height:100%;z-index:3;pointer-events:none}
 .flower{position:absolute;transform-origin:50% 100%;pointer-events:auto;cursor:pointer;will-change:transform}
 .flower img{position:absolute;display:block;pointer-events:none;-webkit-user-drag:none;user-select:none}
+.flower.nopdf{cursor:default}
+.pdf-backdrop{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(28,28,32,.42);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);opacity:0;pointer-events:none;transition:opacity .3s ease}
+.pdf-backdrop.open{opacity:1;pointer-events:auto}
+.pdf-win{position:relative;width:min(88vw,1040px);height:84vh;max-height:880px;background:#4b4f54;border-radius:24px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.38);display:flex;flex-direction:column;transform:scale(.95) translateY(12px);transition:transform .32s cubic-bezier(.22,1,.36,1)}
+.pdf-backdrop.open .pdf-win{transform:scale(1) translateY(0)}
+.pdf-bar{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:center;gap:14px;padding:0 22px;height:62px;background:rgba(255,255,255,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(0,0,0,.06);transition:opacity .28s ease,transform .28s ease}
+.pdf-win.idle .pdf-bar{opacity:0;transform:translateY(-12px);pointer-events:none}
+.pdf-title{font-weight:600;font-size:17px;color:#333;letter-spacing:-.2px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pdf-ext{flex:none;font-size:13px;font-weight:600;color:#777;border:1px solid #dcdcdc;border-radius:20px;padding:5px 12px;text-decoration:none;transition:border-color .2s,color .2s,background .2s}
+.pdf-ext:hover{border-color:#bbb;color:#444;background:rgba(255,255,255,.7)}
+.pdf-close{flex:none;width:38px;height:38px;border-radius:50%;border:none;background:#f0f0f0;color:#666;font-size:17px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s}
+.pdf-close:hover{background:#e2e2e2;color:#111}
+.pdf-scroll{flex:1;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0;scrollbar-width:none;-ms-overflow-style:none}
+.pdf-scroll::-webkit-scrollbar{width:0;height:0;display:none}
+.pdf-page{flex:none;width:100%;background:#fff;overflow:hidden}
+.pdf-page canvas{display:block;width:100%;height:auto}
+.pdf-loading{margin:auto;color:rgba(255,255,255,.85);font-size:15px;letter-spacing:.5px}
+.pdf-fallback{flex:1;width:100%;border:0;background:#fff}
+html.pdf-lock,body.pdf-lock{overflow:hidden}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/"}}</script>
 </head>
@@ -116,6 +135,16 @@ body.detail-on .detail-panel{opacity:1;transform:none}
   <div class="dt" id="dTitle"></div>
   <div class="dm" id="dMeta"></div>
   <div id="dBody"></div>
+</div>
+<div class="pdf-backdrop" id="pdfBackdrop">
+  <div class="pdf-win" role="dialog" aria-modal="true" aria-labelledby="pdfTitle">
+    <div class="pdf-bar">
+      <div class="pdf-title" id="pdfTitle"></div>
+      <a class="pdf-ext" id="pdfExt" href="#" target="_blank" rel="noopener">新窗口打开</a>
+      <button class="pdf-close" id="pdfClose" aria-label="关闭">✕</button>
+    </div>
+    <div class="pdf-scroll" id="pdfScroll"></div>
+  </div>
 </div>
 <main class="lower" id="lower">
 <div class="lower-inner" id="lowerInner">
@@ -520,28 +549,36 @@ function goSnap(i){
   window.scrollTo({top:pts[i],behavior:'smooth'});
   setTimeout(()=>snapLock=false,900);
 }
+const pdfOpen=()=>{const b=document.getElementById('pdfBackdrop');return !!b&&b.classList.contains('open');};
 addEventListener('wheel',e=>{
+  if(pdfOpen())return;
   if(e.ctrlKey||snapLock||Math.abs(e.deltaY)<10)return;
   e.preventDefault();
   goSnap(snapIdx+(e.deltaY>0?1:-1));
 },{passive:false});
 let touchY0=0;
 addEventListener('touchstart',e=>touchY0=e.touches[0].clientY,{passive:true});
-addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+addEventListener('touchmove',e=>{if(!pdfOpen())e.preventDefault();},{passive:false});
 addEventListener('touchend',e=>{
+  if(pdfOpen())return;
   const d=touchY0-e.changedTouches[0].clientY;
   if(Math.abs(d)>44)goSnap(snapIdx+(d>0?1:-1));
 },{passive:true});
 addEventListener('keydown',e=>{
+  if(pdfOpen())return;
   if(e.key==='ArrowDown'||e.key==='PageDown'||e.key===' '){e.preventDefault();goSnap(snapIdx+1);}
   else if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();goSnap(snapIdx-1);}
 });
 scrollArrow.addEventListener('click',()=>goSnap(1));
 const _sq=new URLSearchParams(location.search).get('screen');
+if('scrollRestoration' in history)history.scrollRestoration='manual';
 if(_sq!==null){
   const _n=+_sq;
   const _jump=()=>{const pts=snapPoints();if(pts[_n]!==undefined){snapIdx=_n;setArrow(_n!==0);window.scrollTo(0,pts[_n]);}};
   _jump();addEventListener('load',()=>{_jump();setTimeout(_jump,300);setTimeout(_jump,900);});
+}else{
+  const _top=()=>{snapIdx=0;setArrow(false);window.scrollTo(0,0);};
+  _top();addEventListener('load',()=>{_top();setTimeout(_top,300);setTimeout(_top,900);});
 }
 let scrollSyncTimer;
 addEventListener('scroll',()=>{
@@ -719,20 +756,20 @@ requestAnimationFrame(loop);
   const gDots=document.querySelectorAll('#gardenSvg circle');
   const gTitle=document.querySelector('.garden-title');
   const FLOWERS=[
-    {id:'dog',z:1,parts:[
+    {id:'dog',z:1,pdf:'pet-sleeper.pdf',title:'大众点评 · 宠物试睡官活动长图设计',parts:[
       ['dog-bar.png',287.5,2544.3,292.0,108.5],
       ['dog.png',315.8,2470.6,235.0,257.0]]},
-    {id:'iu',z:2,parts:[
+    {id:'iu',z:2,pdf:'mandi.pdf',title:'Māndi 公交盲盒 APP · UI 设计',parts:[
       ['iu-card.png',690.0,2351.9,265.0,281.9],
       ['iu.png',706.2,2399.9,236.0,214.0]]},
     {id:'cloud',z:3,parts:[
       ['cloud-body.png',878.0,2393.0,322.0,323.0],
       ['cloud-inner.png',938.0,2454.0,203.0,203.0]]},
-    {id:'teacher',z:4,parts:[
+    {id:'teacher',z:4,pdf:'teachers-day.pdf',title:'美团 · 教师节活动设计「点亮成长，聚光同行」',parts:[
       ['teacher.png',595.0,2597.0,235.0,132.5]]},
-    {id:'ip',z:5,parts:[
+    {id:'ip',z:5,pdf:'wushan-wizards.pdf',title:'巫山十巫 · 数字 IP 文创设计 WUSHAN WIZARDS',parts:[
       ['ip-circle.png',1334.6,2489.1,255.0,247.0]]},
-    {id:'star',z:6,parts:[
+    {id:'star',z:6,pdf:'yummy.pdf',title:'YUMMY 巧克力情感化包装设计',parts:[
       ['star.png',1166.0,2411.0,265.0,280.0]]},
   ];
   FLOWERS.forEach(fl=>{
@@ -744,7 +781,7 @@ requestAnimationFrame(loop);
     mk.style.left=x0+'px';mk.style.top=y0+'px';mk.style.width=w+'px';mk.style.height=h+'px';
     maskLayer.appendChild(mk);
     const wrap=document.createElement('div');
-    wrap.className='flower';
+    wrap.className='flower'+(fl.pdf?'':' nopdf');
     wrap.style.left=x0+'px';wrap.style.top=y0+'px';wrap.style.width=w+'px';wrap.style.height=h+'px';wrap.style.zIndex=fl.z;
     fl.parts.forEach(([f,x,y,pw,ph],i)=>{
       const im=document.createElement('img');
@@ -760,7 +797,114 @@ requestAnimationFrame(loop);
          {transform:'rotate(-6deg)',offset:.54},{transform:'rotate(4deg)',offset:.72},{transform:'rotate(0deg)'}],
         {duration:850,easing:'ease-in-out'});
     });
+    if(fl.pdf)wrap.addEventListener('click',()=>openPdf(fl.pdf,fl.title));
   });
+  const pdfBackdrop=document.getElementById('pdfBackdrop'),pdfScroll=document.getElementById('pdfScroll'),
+        pdfWin=pdfBackdrop.querySelector('.pdf-win'),
+        pdfTitle=document.getElementById('pdfTitle'),pdfExt=document.getElementById('pdfExt');
+  let pdfToken=0,idleTimer=null;const pdfDocs={};
+  function wakeBar(){
+    pdfWin.classList.remove('idle');
+    clearTimeout(idleTimer);
+    idleTimer=setTimeout(()=>pdfWin.classList.add('idle'),1800);
+  }
+  pdfWin.addEventListener('pointerdown',wakeBar);
+  let pdfJsPromise=null;
+  function loadPdfJs(){
+    if(window.pdfjsLib)return Promise.resolve(window.pdfjsLib);
+    if(pdfJsPromise)return pdfJsPromise;
+    pdfJsPromise=new Promise((res,rej)=>{
+      const s=document.createElement('script');
+      s.src='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js';
+      s.onload=()=>{
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+        res(window.pdfjsLib);
+      };
+      s.onerror=rej;
+      document.head.appendChild(s);
+    });
+    return pdfJsPromise;
+  }
+  async function showPdf(file,token){
+    pdfScroll.innerHTML='<div class="pdf-loading">PDF 加载中…</div>';
+    let doc=pdfDocs[file];
+    if(!doc){
+      try{
+        const pdfjs=await loadPdfJs();
+        doc=await pdfjs.getDocument({url:'pdfs/'+file,disableRange:true,disableStream:true}).promise;
+      }catch(err){
+        if(token!==pdfToken)return;
+        pdfScroll.innerHTML='';
+        const f=document.createElement('iframe');
+        f.className='pdf-fallback';f.src='pdfs/'+file;
+        pdfScroll.appendChild(f);
+        return;
+      }
+      if(token!==pdfToken)return;
+      pdfDocs[file]=doc;
+    }
+    if(token!==pdfToken)return;
+    pdfScroll.innerHTML='';
+    let contW=pdfScroll.clientWidth;
+    const pages=[];
+    for(let n=1;n<=doc.numPages;n++){
+      const page=await doc.getPage(n);
+      const base=page.getViewport({scale:1});
+      const el=document.createElement('div');
+      el.className='pdf-page';el.dataset.page=n;
+      el.style.width=contW+'px';
+      el.style.height=Math.round(contW*base.height/base.width)+'px';
+      pdfScroll.appendChild(el);
+      pages.push({el,page,base});
+    }
+    const contW2=pdfScroll.clientWidth;
+    if(contW2&&contW2!==contW){
+      contW=contW2;
+      pages.forEach(({el,base})=>{
+        el.style.width=contW+'px';
+        el.style.height=Math.round(contW*base.height/base.width)+'px';
+      });
+    }
+    pdfScroll.scrollTop=0;
+    async function drawPage(el){
+      const p=pages.find(x=>x.el===el);
+      if(!p||el.dataset.done)return;
+      el.dataset.done='1';
+      const dpr=Math.min(window.devicePixelRatio||1,2);
+      const vp=p.page.getViewport({scale:contW/p.base.width*dpr});
+      const c=document.createElement('canvas');
+      c.width=Math.floor(vp.width);c.height=Math.floor(vp.height);
+      c.style.width=contW+'px';
+      el.style.height='auto';el.innerHTML='';el.appendChild(c);
+      try{await p.page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;}catch(e){}
+    }
+    const io=new IntersectionObserver(es=>{
+      es.forEach(en=>{if(en.isIntersecting){io.unobserve(en.target);drawPage(en.target);}});
+    },{root:pdfScroll,rootMargin:'500px 0px'});
+    pages.forEach(p=>io.observe(p.el));
+  }
+  function openPdf(file,title){
+    pdfTitle.textContent=title;
+    pdfExt.href='pdfs/'+file;
+    pdfBackdrop.classList.add('open');
+    document.documentElement.classList.add('pdf-lock');
+    document.body.classList.add('pdf-lock');
+    wakeBar();
+    showPdf(file,++pdfToken);
+  }
+  function closePdf(){
+    if(!pdfBackdrop.classList.contains('open'))return;
+    pdfBackdrop.classList.remove('open');
+    document.documentElement.classList.remove('pdf-lock');
+    document.body.classList.remove('pdf-lock');
+    pdfWin.classList.remove('idle');
+    clearTimeout(idleTimer);
+    pdfToken++;
+    setTimeout(()=>{pdfScroll.innerHTML='';},300);
+  }
+  document.getElementById('pdfClose').addEventListener('click',closePdf);
+  pdfBackdrop.addEventListener('click',e=>{if(e.target===pdfBackdrop)closePdf();});
+  addEventListener('keydown',e=>{if(e.key==='Escape')closePdf();});
   let gardenPlayed=false;
   function playGarden(){
     if(gardenPlayed)return;

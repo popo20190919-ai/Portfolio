@@ -130,14 +130,14 @@ const POSES = [
 ];
 
 const OUTFITS = [
-    { id: 'O1', name: '黑白格纹衬衫', en: 'PLAID SHIRT', look: 'L01', img: IMG('product photography of an oversized black and white plaid flannel shirt with frayed raw hem, laid flat on plain white background, studio lighting, e-commerce catalog style, no people', 'square') },
-    { id: 'O2', name: '铆钉皮夹克', en: 'STUD JACKET', look: 'L03', img: IMG('product photography of a black leather biker jacket covered with silver studs and spikes, laid flat on plain white background, studio lighting, e-commerce catalog style, no people', 'square') },
-    { id: 'O3', name: '透视网纱上衣', en: 'SHEER MESH TOP', look: 'L02', img: IMG('product photography of a sheer black mesh ruffled long sleeve top with lace ties, laid flat on plain white background, studio lighting, e-commerce catalog style, no people', 'square') },
-    { id: 'O4', name: '军绿吊带', en: 'OLIVE CAMISOLE', look: 'L04', img: IMG('product photography of an olive dark green lace-up camisole top with thin straps and drawstrings, laid flat on plain white background, studio lighting, e-commerce catalog style, no people', 'square') },
-    { id: 'O5', name: '镂空针织上衣', en: 'CUTOUT KNIT', look: 'L05', img: IMG('product photography of a black fishnet knit cut-out long sleeve top with high neck, laid flat on plain white background, studio lighting, e-commerce catalog style, no people', 'square') },
-    { id: 'O6', name: '皮革背心', en: 'LEATHER TANK', look: 'L06', img: IMG('product photography of a black glossy leather tank top, laid flat on plain white background, studio lighting, e-commerce catalog style, no people', 'square') },
-    { id: 'O7', name: '机能派克大衣', en: 'TECH PARKA', look: 'L07', img: IMG('product photography of an oversized black technical nylon parka coat with hood and drawstrings, laid flat on plain white background, studio lighting, e-commerce catalog style, no people', 'square') },
-    { id: 'O8', name: '丝绸高领衫', en: 'SILK TURTLENECK', look: 'L08', img: IMG('product photography of a black silk turtleneck long sleeve top, laid flat on plain white background, studio lighting, e-commerce catalog style, no people', 'square') },
+    { id: 'O1', name: '黑白格纹衬衫', en: 'PLAID SHIRT', look: 'L01', img: 'images/library/lib_top_10.png' },
+    { id: 'O2', name: '铆钉皮夹克', en: 'STUD JACKET', look: 'L03', img: 'images/library/lib_top_11.png' },
+    { id: 'O3', name: '透视网纱上衣', en: 'SHEER MESH TOP', look: 'L02', img: 'images/library/lib_top_12.png' },
+    { id: 'O4', name: '军绿吊带', en: 'OLIVE CAMISOLE', look: 'L04', img: 'images/library/lib_top_13.png' },
+    { id: 'O5', name: '镂空针织上衣', en: 'CUTOUT KNIT', look: 'L05', img: 'images/library/lib_top_14.png' },
+    { id: 'O6', name: '皮革背心', en: 'LEATHER TANK', look: 'L06', img: 'images/library/lib_top_15.png' },
+    { id: 'O7', name: '机能派克大衣', en: 'TECH PARKA', look: 'L07', img: 'images/library/lib_top_16.png' },
+    { id: 'O8', name: '丝绸高领衫', en: 'SILK TURTLENECK', look: 'L08', img: 'images/library/lib_top_17.png' },
     { id: 'O9', name: '巴西扎染球衣', en: 'BRAZIL TIE-DYE JERSEY', img: 'images/library/lib_top_1.png' },
     { id: 'O10', name: '棕麂皮夹克', en: 'BROWN SUEDE JACKET', img: 'images/library/lib_top_2.png' },
     { id: 'O11', name: '蓝纹无袖上衣', en: 'BLUE WAVE TANK', img: 'images/library/lib_top_3.png' },
@@ -157,19 +157,19 @@ const OUTFITS = [
 ];
 
 const SHOES = [
-    { id: 'S1', name: '厚底皮靴', en: 'CHUNKY BOOTS', look: 'L01', img: IMG('product photography of a pair of black chunky leather platform boots with thick soles, on plain white background, studio lighting, e-commerce catalog style', 'square') },
-    { id: 'S2', name: '黑色运动鞋', en: 'BLACK SNEAKERS', look: 'L07', img: IMG('product photography of a pair of black technical sneakers with laces, on plain white background, studio lighting, e-commerce catalog style', 'square') },
-    { id: 'S3', name: '黑色乐福鞋', en: 'BLACK LOAFERS', look: 'L08', img: IMG('product photography of a pair of black leather loafers, on plain white background, studio lighting, e-commerce catalog style', 'square') },
+    { id: 'S1', name: '厚底皮靴', en: 'CHUNKY BOOTS', look: 'L01', img: 'images/library/lib_shoes_4.png' },
+    { id: 'S2', name: '黑色运动鞋', en: 'BLACK SNEAKERS', look: 'L07', img: 'images/library/lib_shoes_5.png' },
+    { id: 'S3', name: '黑色乐福鞋', en: 'BLACK LOAFERS', look: 'L08', img: 'images/library/lib_shoes_6.png' },
     { id: 'S4', name: '黑色尖头高跟鞋', en: 'BLACK STILETTO PUMPS', img: 'images/library/lib_shoes_1.png' },
     { id: 'S5', name: '厚底乐福鞋', en: 'CHUNKY LOAFERS', img: 'images/library/lib_shoes_2.png' },
     { id: 'S6', name: '军绿短靴', en: 'OLIVE ANKLE BOOTS', img: 'images/library/lib_shoes_3.png' }
 ];
 
 const ACCESSORIES = [
-    { id: 'A1', name: '黑色棒球帽', en: 'BASEBALL CAP', look: 'L03', img: IMG('product photography of a black baseball cap, on plain white background, studio lighting, e-commerce catalog style', 'square') },
-    { id: 'A2', name: '银色项链', en: 'SILVER NECKLACE', look: 'L04', img: IMG('product photography of a layered silver chain necklace, on plain white background, studio lighting, e-commerce catalog style', 'square') },
-    { id: 'A3', name: '黑色腋下包', en: 'SHOULDER BAG', look: 'L01', img: IMG('product photography of a small black leather shoulder underarm bag, on plain white background, studio lighting, e-commerce catalog style', 'square') },
-    { id: 'A4', name: '黑色墨镜', en: 'BLACK SUNGLASSES', look: 'L07', img: IMG('product photography of black sunglasses with thick frames, on plain white background, studio lighting, e-commerce catalog style', 'square') }
+    { id: 'A1', name: '黑色棒球帽', en: 'BASEBALL CAP', look: 'L03', img: 'images/library/lib_acc_1.png' },
+    { id: 'A2', name: '银色项链', en: 'SILVER NECKLACE', look: 'L04', img: 'images/library/lib_acc_2.png' },
+    { id: 'A3', name: '黑色腋下包', en: 'SHOULDER BAG', look: 'L01', img: 'images/library/lib_acc_3.png' },
+    { id: 'A4', name: '黑色墨镜', en: 'BLACK SUNGLASSES', look: 'L07', img: 'images/library/lib_acc_4.png' }
 ];
 
 const findLook = (id) => LOOKS.find((l) => l.id === id) || LOOKS[0];

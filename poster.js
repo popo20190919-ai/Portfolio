@@ -32,7 +32,8 @@
             id: t.id, name: t.name, title: t.title, sub: t.sub,
             board: t.board, titleBox: t.titleBox, subBox: t.subBox,
             titleFs: t.titleFs || 116, subFs: t.subFs || 62,
-            nodes: t.nodes, slots: t.slots || []
+            nodes: t.nodes, slots: t.slots || [],
+            cat: t.cat || 'mobile', w: t.w || W, h: t.h || H
         };
     });
     var STICKERS = LAYOUT.stickers;
@@ -58,7 +59,35 @@
         }
     }
 
-    var state = { tpl: 't1', sel: null, viewScale: 0.2 };
+    // 非阻塞提示（与导入功能共用 #importToast 浮层，禁止使用 alert 防事件循环卡死）
+    function studioToast(msg, isErr) {
+        var t = $('importToast');
+        if (!t) {
+            t = document.createElement('div');
+            t.id = 'importToast';
+            t.style.cssText = 'position:fixed;left:50%;bottom:88px;transform:translateX(-50%) translateY(16px);'
+                + 'max-width:82vw;padding:14px 22px;border-radius:12px;font-size:15px;line-height:1.6;'
+                + 'white-space:pre-line;text-align:left;z-index:99999;opacity:0;pointer-events:none;'
+                + 'transition:opacity .25s ease,transform .25s ease;color:#fff;'
+                + 'background:rgba(28,32,44,.97);border:1px solid rgba(255,255,255,.14);'
+                + 'box-shadow:0 12px 40px rgba(0,0,0,.55);';
+            document.body.appendChild(t);
+        }
+        t.textContent = msg;
+        t.style.background = isErr ? 'rgba(74,24,32,.98)' : 'rgba(28,32,44,.97)';
+        t.style.borderColor = isErr ? 'rgba(255,96,120,.5)' : 'rgba(255,255,255,.14)';
+        requestAnimationFrame(function () {
+            t.style.opacity = '1';
+            t.style.transform = 'translateX(-50%) translateY(0)';
+        });
+        clearTimeout(t._tm);
+        t._tm = setTimeout(function () {
+            t.style.opacity = '0';
+            t.style.transform = 'translateX(-50%) translateY(16px)';
+        }, 3600);
+    }
+
+    var state = { tpl: 't1', sel: null, viewScale: 0.2, cat: 'mobile' };
     var edits = {};
     var lidSeq = 1;
 
@@ -118,23 +147,30 @@
         var base = 'left:' + sl.x + 'px;top:' + sl.y + 'px;width:' + sl.w + 'px;height:' + sl.h + 'px;';
         var ds = preview ? '' : ' data-slot="' + sl.id + '"';
         var edc = preview ? '' : ' p-editable';
+        var emc = src ? '' : ' p-slot-empty';
         if (sl.shape === 'thumb') {
             var ow = sl.clipW || sl.w;
             var rad = sl.rc || ((sl.r || 0) + 'px');
-            var timg = sl.clipW
-                ? '<img class="slot-thumb-img" src="' + src + '" alt="" style="left:0;top:0;width:' + sl.w + 'px;height:' + sl.h + 'px">'
-                : '<img class="slot-thumb-img" src="' + src + '" alt="">';
-            return '<div class="p-slot p-slot-thumb p-chrome' + edc + (uiOff ? ' off' : '') + '"' + ds + ' style="left:' + sl.x + 'px;top:' + sl.y + 'px;width:' + ow + 'px;height:' + sl.h + 'px;border-radius:' + rad + '">' + timg + '</div>';
+            var timg = src
+                ? (sl.clipW
+                    ? '<img class="slot-thumb-img" src="' + src + '" alt="" style="left:0;top:0;width:' + sl.w + 'px;height:' + sl.h + 'px">'
+                    : '<img class="slot-thumb-img" src="' + src + '" alt="">')
+                : '';
+            return '<div class="p-slot p-slot-thumb p-chrome' + edc + emc + (uiOff ? ' off' : '') + '"' + ds + ' style="left:' + sl.x + 'px;top:' + sl.y + 'px;width:' + ow + 'px;height:' + sl.h + 'px;border-radius:' + rad + '">' + timg + '</div>';
         }
         if (sl.shape === 'circle') {
-            return '<div class="p-slot p-slot-circle' + edc + '"' + ds + ' style="' + base + '">'
-                + '<img class="slot-img" src="' + src + '" alt="">'
-                + (sl.check ? '<div class="slot-check">✓</div>' : '')
+            return '<div class="p-slot p-slot-circle' + edc + emc + '"' + ds + ' style="' + base + '">'
+                + (src
+                    ? '<img class="slot-img" src="' + src + '" alt="">'
+                        + (sl.check ? '<div class="slot-check">✓</div>' : '')
+                    : '')
                 + '</div>';
         }
-        return '<div class="p-slot p-slot-card' + edc + '"' + ds + ' style="' + base + '">'
-            + '<div class="slot-card-body"><img class="slot-img" src="' + src + '" alt=""></div>'
-            + '<div class="slot-arrow"><i>→</i></div>'
+        return '<div class="p-slot p-slot-card' + edc + emc + '"' + ds + ' style="' + base + '">'
+            + (src
+                ? '<div class="slot-card-body"><img class="slot-img" src="' + src + '" alt=""></div>'
+                    + '<div class="slot-arrow"><i>→</i></div>'
+                : '')
             + '</div>';
     }
 
@@ -181,6 +217,8 @@
         var f = FONTS[ed.font];
         var p = document.createElement('div');
         p.className = 'poster';
+        p.style.width = (tpl.w || W) + 'px';
+        p.style.height = (tpl.h || H) + 'px';
         if (!preview) p.dataset.edit = 'board';
         p.style.setProperty('--pfont', f.stack);
         p.style.setProperty('--pweight', f.w);
@@ -229,7 +267,7 @@
                 html += textSlotHtml(sl, tv, !ed.ui, ed, preview);
             } else {
                 var src = ed.slotImgs[sl.id] || sl.src;
-                if (src) html += slotHtml(sl, src, !ed.ui, preview);
+                if (src || !preview) html += slotHtml(sl, src || '', !ed.ui, preview);
             }
         });
 
@@ -246,8 +284,10 @@
     var wrap = $('posterWrap');
 
     function fit() {
+        var t = getTpl(state.tpl);
+        var tw = t.w || W, th = t.h || H;
         var r = stage.getBoundingClientRect();
-        var s = Math.min((r.width - 70) / W, (r.height - 90) / H);
+        var s = Math.min((r.width - 70) / tw, (r.height - 90) / th);
         wrap.style.transform = 'translate(-50%,-50%) scale(' + s + ')';
         state.viewScale = s;
     }
@@ -273,17 +313,22 @@
     }
 
     function buildThumbs() {
-        var rail = $('tplRail');
-        TPLS.forEach(function (t) {
+        var grid = $('tplGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        var list = TPLS.filter(function (t) { return (t.cat || 'mobile') === state.cat; });
+        list.forEach(function (t) {
             var card = document.createElement('div');
             card.className = 'pe-tpl-card' + (t.id === state.tpl ? ' active' : '');
             card.dataset.tpl = t.id;
             var holder = document.createElement('div');
             holder.className = 'pe-thumb-scale';
-            holder.style.transform = 'scale(0.1495)';
+            holder.style.width = (t.w || W) + 'px';
+            holder.style.height = (t.h || H) + 'px';
             holder.appendChild(buildPoster(t, defaultEdit(t), null, true));
             var thumb = document.createElement('div');
             thumb.className = 'pe-thumb';
+            thumb.style.aspectRatio = (t.w || W) + ' / ' + (t.h || H);
             thumb.appendChild(holder);
             card.appendChild(thumb);
             var name = document.createElement('div');
@@ -291,8 +336,36 @@
             name.textContent = t.name;
             card.appendChild(name);
             card.addEventListener('click', function () { selectTpl(t.id); });
-            rail.appendChild(card);
+            grid.appendChild(card);
         });
+        if (!list.length) {
+            var empty = document.createElement('div');
+            empty.className = 'pe-tpl-empty';
+            empty.innerHTML = state.cat === 'pc'
+                ? '电脑端模板即将上线<br>敬请期待'
+                : '暂无模板';
+            grid.appendChild(empty);
+        }
+        fitThumbs();
+    }
+
+    function setCat(cat) {
+        if (state.cat === cat) return;
+        state.cat = cat;
+        $('catMobile').classList.toggle('on', cat === 'mobile');
+        $('catPc').classList.toggle('on', cat === 'pc');
+        buildThumbs();
+    }
+
+    function fitThumbs() {
+        var thumbs = document.querySelectorAll('#tplGrid .pe-thumb');
+        for (var i = 0; i < thumbs.length; i++) {
+            var holder = thumbs[i].firstElementChild;
+            var w = thumbs[i].clientWidth;
+            var card = thumbs[i].closest('.pe-tpl-card');
+            var tw = (card && getTpl(card.dataset.tpl).w) || W;
+            if (holder && w) holder.style.transform = 'scale(' + (w / tw) + ')';
+        }
     }
 
     function stkCard(s, isCustom) {
@@ -525,6 +598,10 @@
 
     function flashRow(el) {
         if (!el) return;
+        var scope = el.closest('.pe-panel') || document;
+        scope.querySelectorAll('.pe-flash').forEach(function (e) {
+            if (e !== el) { e.classList.remove('pe-flash'); clearTimeout(e._flashTm); }
+        });
         el.classList.remove('pe-flash');
         void el.offsetWidth;
         el.classList.add('pe-flash');
@@ -532,8 +609,20 @@
         el._flashTm = setTimeout(function () { el.classList.remove('pe-flash'); }, 1800);
     }
 
+    // 右栏分页切换：main=主画面（背景/手机画面/文案/人物），ui=界面元素（小图/文字槽）
+    function showPanelPage(pg) {
+        document.querySelectorAll('.pe-panel .pe-ppage').forEach(function (d) {
+            d.hidden = d.dataset.ppage !== pg;
+        });
+        $('ptabMain').classList.toggle('on', pg === 'main');
+        $('ptabUi').classList.toggle('on', pg === 'ui');
+        var body = document.querySelector('.pe-panel-body');
+        if (body) body.scrollTop = 0;
+    }
+
     // 点击海报上的可编辑元素 → 右侧面板自动滚动定位 + 高亮 + 聚焦
     function focusPanel(kind, id) {
+        showPanelPage(kind === 'slot' || kind === 'chip' ? 'ui' : 'main');
         var row = null, focusEl = null;
         if (kind === 'title') { row = $('inTitle'); focusEl = $('inTitle'); }
         else if (kind === 'sub') { row = $('inSub'); focusEl = $('inSub'); }
@@ -580,6 +669,7 @@
                 if (!moved) {
                     var ctl = $('elCtl');
                     if (ctl && !ctl.hidden) {
+                        showPanelPage('main');
                         try { ctl.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e2) { ctl.scrollIntoView(); }
                         flashRow(ctl);
                     }
@@ -746,6 +836,9 @@
             var files = Array.prototype.slice.call(e.target.files || []).filter(function (f) {
                 return f.type.startsWith('image/');
             });
+            e.target.value = '';
+            if (!files.length) return;
+            var done = 0, okAll = true, failAll = 0;
             files.forEach(function (file) {
                 readImageFile(file, function (url) {
                     var img = new Image();
@@ -759,14 +852,25 @@
                             custom: true
                         };
                         customStickers.push(item);
-                        var ok = saveCustom();
+                        if (!saveCustom()) okAll = false;
                         buildStickers();
-                        if (!ok) alert('浏览器本地存储空间已满，该素材仅本次打开有效，刷新后需重新上传。');
+                        finish();
                     };
+                    img.onerror = function () { failAll++; finish(); };
                     img.src = url;
                 });
             });
-            e.target.value = '';
+            function finish() {
+                done++;
+                if (done < files.length) return;
+                if (failAll === files.length) {
+                    studioToast('图片读取失败，请换用 PNG / JPG 图片后重试', true);
+                } else if (!okAll) {
+                    studioToast('浏览器本地存储空间已满，素材本次可用，刷新后需重新上传', true);
+                } else {
+                    studioToast('已上传 ' + (files.length - failAll) + ' 个素材，点击素材即可添加到海报');
+                }
+            }
         });
 
         $('rngEl').addEventListener('input', function () {
@@ -847,6 +951,7 @@
             $('tabStk').classList.remove('on');
             $('tplRail').hidden = false;
             $('stkRail').hidden = true;
+            requestAnimationFrame(fitThumbs);
         });
         $('tabStk').addEventListener('click', function () {
             this.classList.add('on');
@@ -854,6 +959,12 @@
             $('stkRail').hidden = false;
             $('tplRail').hidden = true;
         });
+
+        $('ptabMain').addEventListener('click', function () { showPanelPage('main'); });
+        $('ptabUi').addEventListener('click', function () { showPanelPage('ui'); });
+
+        $('catMobile').addEventListener('click', function () { setCat('mobile'); });
+        $('catPc').addEventListener('click', function () { setCat('pc'); });
 
         $('btnReset').addEventListener('click', function () {
             edits[state.tpl] = defaultEdit(getTpl(state.tpl));
@@ -882,6 +993,8 @@
             return;
         }
         var btn = $('btnExport');
+        var tpl = getTpl(state.tpl);
+        var tw = tpl.w || W, th = tpl.h || H;
         btn.textContent = '导出中…';
         var host = $('exportHost');
         document.fonts.ready.then(function () {
@@ -894,22 +1007,22 @@
                     backgroundColor: '#000000',
                     useCORS: true,
                     logging: false,
-                    width: W,
-                    height: H
+                    width: tw,
+                    height: th
                 });
             });
         }).then(function (canvas) {
             var a = document.createElement('a');
-            a.download = 'appstore-' + getTpl(state.tpl).name + '-1284x2778.png';
+            a.download = 'appstore-' + tpl.name + '-' + tw + 'x' + th + '.png';
             a.href = canvas.toDataURL('image/png');
             document.body.appendChild(a);
             a.click();
             a.remove();
             host.innerHTML = '';
-            btn.textContent = '导出 PNG · 1284×2778';
+            btn.textContent = '导出 PNG · ' + tw + '×' + th;
         }).catch(function (err) {
             host.innerHTML = '';
-            btn.textContent = '导出 PNG · 1284×2778';
+            btn.textContent = '导出 PNG · ' + tw + '×' + th;
             alert('导出失败：' + (err && err.message ? err.message : err));
         });
     }
@@ -932,6 +1045,8 @@
         syncPanel();
         renderPoster();
         window.addEventListener('resize', fit);
+        window.addEventListener('resize', fitThumbs);
+        requestAnimationFrame(fitThumbs);
     }
 
     window.PosterStudio = {
@@ -941,10 +1056,12 @@
             tpl.subFs = tpl.subFs || 62;
             tpl.nodes = tpl.nodes || [];
             tpl.slots = tpl.slots || [];
+            tpl.w = tpl.w || W;
+            tpl.h = tpl.h || H;
+            tpl.cat = tpl.cat || (tpl.h >= tpl.w ? 'mobile' : 'pc');
             TPLS.push(tpl);
             edits[tpl.id] = defaultEdit(tpl);
-            var rail = $('tplRail');
-            rail.innerHTML = '<div class="pe-rail-label">选择模板 / TEMPLATES</div>';
+            setCat(tpl.cat);
             buildThumbs();
             selectTpl(tpl.id);
         }

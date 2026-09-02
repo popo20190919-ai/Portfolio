@@ -289,16 +289,6 @@ function updateStage() {
     $('stageImg').src = src;
     document.querySelector('.stage-img-wrap').classList.toggle('is-gen', state.mode === 'gen' && !!state.gen);
 
-    const dlBtn = $('cutDlBtn');
-    if (dlBtn) {
-        const canDl = state.mode === 'gen' && state.gen && state.gen.cut;
-        dlBtn.hidden = !canDl;
-        if (canDl) {
-            dlBtn.href = state.gen.img;
-            dlBtn.download = `figure-cutout-${state.gen.id}.png`;
-        }
-    }
-
     updateInfo();
     updateChips();
     renderLibrary();
@@ -331,7 +321,7 @@ function renderHistory() {
         .map((h, i) => `
             <button type="button" class="history-thumb ${i === state.history.length - 1 ? 'active' : ''}" data-idx="${i}" title="${h.tag}">
                 <img src="${h.img}" alt="${h.tag}" loading="lazy">
-                <span class="thumb-tag">${h.cut ? '已抠底' : 'AI 生成'}</span>
+                <span class="thumb-tag">${h.tag}</span>
             </button>
         `)
         .join('');
@@ -398,8 +388,7 @@ function finishGenerate(token, url, prompt) {
         id: 'G' + token,
         img: url,
         tag: 'AI 生成',
-        prompt,
-        cut: false
+        prompt
     };
     state.history.push(record);
     if (state.history.length > 12) state.history.shift();
@@ -408,158 +397,6 @@ function finishGenerate(token, url, prompt) {
     $('overlay').classList.remove('visible');
     $('genBtn').disabled = false;
     state.generating = false;
-
-    cutoutImage(url).then((png) => {
-        if (!png || token !== state.genToken) return;
-        record.img = png;
-        record.cut = true;
-        if (state.gen === record) updateStage();
-        else renderHistory();
-    });
-}
-
-/* ===== 生成图自动抠底：边缘连通 flood-fill 去纯色背景 → 透明 PNG =====
-   只删除与画面边缘连通的背景区域，人物身上的白 T 等浅色不与边缘连通，不会误删；
-   底边不播种 + 鞋底保护逻辑专门救回踩底边的白鞋 / 白袜。 */
-function cutoutImage(url) {
-    return new Promise((resolve) => {
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-            try {
-                const w = img.naturalWidth;
-                const h = img.naturalHeight;
-                const canvas = document.createElement('canvas');
-                canvas.width = w;
-                canvas.height = h;
-                const ctx = canvas.getContext('2d', { willReadFrequently: true });
-                ctx.drawImage(img, 0, 0);
-                const imageData = ctx.getImageData(0, 0, w, h);
-                const d = imageData.data;
-                const n = w * h;
-
-                let br = 0, bg = 0, bb = 0, bc = 0;
-                const patch = (cx, cy) => {
-                    for (let y = cy; y < cy + 6; y++) {
-                        for (let x = cx; x < cx + 6; x++) {
-                            const i = (y * w + x) * 4;
-                            br += d[i]; bg += d[i + 1]; bb += d[i + 2]; bc++;
-                        }
-                    }
-                };
-                patch(0, 0); patch(w - 6, 0); patch(0, h - 6); patch(w - 6, h - 6);
-                br /= bc; bg /= bc; bb /= bc;
-
-                const TOL = 52;
-                const SOFT = 95;
-                const dist2 = (idx) => {
-                    const i = idx * 4;
-                    const dr = d[i] - br;
-                    const dg = d[i + 1] - bg;
-                    const db = d[i + 2] - bb;
-                    return dr * dr + dg * dg + db * db;
-                };
-                const likeBg = (idx, tol) => dist2(idx) < tol * tol;
-
-                const mask = new Uint8Array(n);
-                const stack = [];
-                const seed = (x, y) => {
-                    const idx = y * w + x;
-                    if (!mask[idx] && likeBg(idx, TOL)) {
-                        mask[idx] = 1;
-                        stack.push(idx);
-                    }
-                };
-                // 只从顶/左/右三边播种：背景互相连通仍可删净，
-                // 而踩在画面底边的白鞋/白袜颜色虽与背景接近，flood fill 无法从鞋底进入，可保住。
-                for (let x = 0; x < w; x += 3) { seed(x, 0); }
-                for (let y = 0; y < h; y += 3) { seed(0, y); seed(w - 1, y); }
-
-                while (stack.length) {
-                    const idx = stack.pop();
-                    const x = idx % w;
-                    const y = (idx / w) | 0;
-                    let j;
-                    if (x > 0) { j = idx - 1; if (!mask[j] && likeBg(j, TOL)) { mask[j] = 1; stack.push(j); } }
-                    if (x < w - 1) { j = idx + 1; if (!mask[j] && likeBg(j, TOL)) { mask[j] = 1; stack.push(j); } }
-                    if (y > 0) { j = idx - w; if (!mask[j] && likeBg(j, TOL)) { mask[j] = 1; stack.push(j); } }
-                    if (y < h - 1) { j = idx + w; if (!mask[j] && likeBg(j, TOL)) { mask[j] = 1; stack.push(j); } }
-                }
-
-                let cut = 0;
-                for (let idx = 0; idx < n; idx++) {
-                    if (mask[idx]) cut++;
-                }
-                // 清理人物轮廓外 1px 的灰边（背景-人物混合像素）
-                for (let y = 1; y < h - 1; y++) {
-                    for (let x = 1; x < w - 1; x++) {
-                        const idx = y * w + x;
-                        if (mask[idx]) continue;
-                        if ((mask[idx - 1] || mask[idx + 1] || mask[idx - w] || mask[idx + w]) && likeBg(idx, SOFT)) {
-                            mask[idx] = 1;
-                            cut++;
-                        }
-                    }
-                }
-                // 鞋底保护：底边逐列向上探高，浅色段（白鞋/白袜/白柱背景都是浅色）成段（≥2.5% 图宽）
-                // 后，用段内纹理区分实体与背景：白鞋有皮革纹理/褶皱阴影，色差像素占比高（实测 ~15%）；
-                // 悬空鞋下的白柱是纯色背景，仅 JPEG 噪声（实测 <0.5%）。只恢复判定为实体的段。
-                const PROTECT_H = Math.round(h * 0.12);
-                const MIN_W = Math.max(28, Math.round(w * 0.025));
-                const TEX_LO = 15 * 15;
-                const colH = new Int32Array(w);
-                for (let x = 0; x < w; x++) {
-                    let cnt = 0;
-                    let y = h - 1;
-                    while (y >= 0 && likeBg(y * w + x, TOL) && cnt <= PROTECT_H) { cnt++; y--; }
-                    colH[x] = cnt;
-                }
-                for (let x = 0; x < w; ) {
-                    if (colH[x] > 0 && colH[x] < PROTECT_H) {
-                        let x0 = x;
-                        while (x < w && colH[x] > 0 && colH[x] < PROTECT_H) x++;
-                        if (x - x0 >= MIN_W) {
-                            let total = 0, tex = 0, sumD = 0;
-                            for (let xx = x0; xx < x; xx++) {
-                                const top = h - colH[xx] + 3, bot = h - 3;
-                                for (let y = top; y < bot; y++) {
-                                    const v = dist2(y * w + xx);
-                                    total++;
-                                    sumD += v;
-                                    if (v >= TEX_LO && v < TOL * TOL) tex++;
-                                }
-                            }
-                            if (total > 0 && tex / total > 0.03 && sumD / total > 25) {
-                                for (let xx = x0; xx < x; xx++) {
-                                    const top = h - colH[xx] - 2;
-                                    for (let y = h - 1; y > top && y >= 0; y--) {
-                                        const idx = y * w + xx;
-                                        if (mask[idx]) { mask[idx] = 0; cut--; }
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        x++;
-                    }
-                }
-
-                const ratio = cut / n;
-                if (ratio < 0.04 || ratio > 0.85) { resolve(null); return; }
-
-                for (let idx = 0; idx < n; idx++) {
-                    if (mask[idx]) d[idx * 4 + 3] = 0;
-                }
-
-                ctx.putImageData(imageData, 0, 0);
-                resolve(canvas.toDataURL('image/png'));
-            } catch (err) {
-                resolve(null);
-            }
-        };
-        img.onerror = () => resolve(null);
-        img.src = url;
-    });
 }
 
 function setSvcWarn(show) {
@@ -603,34 +440,20 @@ function failGenerate(token, reason) {
     }
 }
 
-/* 生图 URL：本地预览（python3 serve.py）走同源 /gen 代理，图片字节同源回吐，
-   canvas 可读取像素 → 自动抠底可用；线上 Pages 无代理时回退跨域直连（仅可显示，抠底静默跳过）。 */
-function genUrl(prompt, size) {
-    const host = location.hostname;
-    const local = host === 'localhost' || host === '127.0.0.1' || host === '[::1]';
-    if (local) {
-        return `/gen?prompt=${encodeURIComponent(prompt)}&size=${encodeURIComponent(size)}&_t=${Date.now()}`;
-    }
-    return `${IMG(prompt, size)}&_t=${Date.now()}`;
-}
-
 function loadGeneratedImage(url, prompt, token, attempt, fastFails) {
     const img = new Image();
     const t0 = Date.now();
-    const direct = url.charAt(0) === '/';
     img.onload = () => {
         if (token !== state.genToken) return;
-        if (!direct) {
-            const isPlaceholder = img.naturalWidth >= 1800 || img.naturalHeight >= 1800;
-            if (isPlaceholder && attempt < 10) {
-                $('genCn').textContent = `排队中，正在重试 ${attempt + 1}/10…`;
-                setTimeout(() => loadGeneratedImage(`${url.split('&_r=')[0]}&_r=${attempt + 1}`, prompt, token, attempt + 1, 0), 3500);
-                return;
-            }
-            if (isPlaceholder) {
-                failGenerate(token, 'busy');
-                return;
-            }
+        const isPlaceholder = img.naturalWidth >= 1800 || img.naturalHeight >= 1800;
+        if (isPlaceholder && attempt < 10) {
+            $('genCn').textContent = `排队中，正在重试 ${attempt + 1}/10…`;
+            setTimeout(() => loadGeneratedImage(`${url.split('&_r=')[0]}&_r=${attempt + 1}`, prompt, token, attempt + 1, 0), 3500);
+            return;
+        }
+        if (isPlaceholder) {
+            failGenerate(token, 'busy');
+            return;
         }
         state.serviceOk = true;
         setSvcWarn(false);
@@ -658,8 +481,7 @@ function probeService() {
     const img = new Image();
     img.onload = () => setGenAvailable(true);
     img.onerror = () => setGenAvailable(false);
-    const url = genUrl('a plain light gray solid color test image', 'square');
-    img.src = `${url.split('&_t=')[0]}&_probe=${Date.now()}`;
+    img.src = `${IMG('a plain light gray solid color test image', 'square')}&_probe=${Date.now()}`;
 }
 
 function generate() {
@@ -678,7 +500,7 @@ function generate() {
     $('overlay').classList.add('visible');
 
     const prompt = buildPrompt();
-    const url = genUrl(prompt, 'portrait_4_3');
+    const url = `${IMG(prompt, 'portrait_4_3')}&_t=${Date.now()}`;
     loadGeneratedImage(url, prompt, token, 0, 0);
 }
 

@@ -344,39 +344,6 @@ a { text-decoration: none; color: inherit; }
     width: 525px;
     height: 700px;
     transform: translate(-50%, -50%);
-    background-color: #ffffff;
-    background-image:
-        linear-gradient(45deg, #ededed 25%, transparent 25%),
-        linear-gradient(-45deg, #ededed 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, #ededed 75%),
-        linear-gradient(-45deg, transparent 75%, #ededed 75%);
-    background-size: 22px 22px;
-    background-position: 0 0, 0 11px, 11px -11px, -11px 0;
-}
-
-/* 下载抠底 PNG */
-.cut-dl-btn {
-    position: absolute;
-    right: 26px;
-    bottom: 24px;
-    z-index: 8;
-    display: none;
-    background: #000000;
-    color: var(--acid, #DBFE01);
-    border: 1px solid #000000;
-    padding: 11px 20px;
-    font-family: 'Inter', 'Noto Sans SC', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    text-decoration: none;
-    border-radius: 0;
-    cursor: pointer;
-}
-.cut-dl-btn:not([hidden]) { display: inline-block; }
-.cut-dl-btn:hover {
-    background: var(--acid, #DBFE01);
-    color: #000000;
 }
 
 /* 生成中遮罩 */
