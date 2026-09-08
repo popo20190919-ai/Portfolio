@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>龚珣 · 视觉设计师作品集</title>
+<style>
+:root{--bg:#0c0f12;--ink:#1c1e21;--lime:#b9ff12;--line:rgba(0,0,0,.08)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif;background:#f4f4f2;color:var(--ink);overflow-x:hidden}
+img{display:block}
+
+/* ===== 首屏 9:16 ===== */
+.hero{position:relative;height:100dvh;min-height:560px;overflow:hidden;background:url('images/figma-home/portfolio-bg.jpg') center/cover no-repeat}
+.hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:50%;z-index:2;background:linear-gradient(180deg,rgba(244,244,242,0) 0%,rgba(244,244,242,.55) 38%,rgba(244,244,242,.9) 68%,rgba(244,244,242,.99) 100%);pointer-events:none}
+#stage3d{position:absolute;inset:0;width:100%;height:100%;z-index:1;touch-action:pan-y}
+.m-topbar{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 18px) 22px 0}
+.m-logo{font-size:22px;font-weight:700;letter-spacing:-1px;color:#222}
+.m-topnav{display:flex;gap:22px;font-size:14px;font-weight:600;color:#333}
+.m-topnav a{color:#333;text-decoration:none}
+.m-hint{position:absolute;top:calc(env(safe-area-inset-top) + 64px);left:0;right:0;z-index:5;text-align:center;font-size:12px;color:rgba(0,0,0,.42);letter-spacing:.5px;pointer-events:none}
+.m-hero-title{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 88px);z-index:5;text-align:center;pointer-events:none}
+.m-hero-title h1{font-size:34px;font-weight:800;letter-spacing:-1.5px;color:#1a1c1e;line-height:1.2}
+.m-hero-title p{margin-top:10px;font-size:14px;color:rgba(0,0,0,.55);letter-spacing:1px}
+.m-scroll-cue{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 26px);z-index:5;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.75);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;animation:bob 1.6s ease-in-out infinite;text-decoration:none;color:#222}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* ===== 路牌详情（底部弹层） ===== */
+.m-sheet{position:absolute;left:0;right:0;bottom:0;z-index:8;max-height:62dvh;overflow-y:auto;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);border-radius:24px 24px 0 0;padding:20px 22px calc(env(safe-area-inset-bottom) + 24px);box-shadow:0 -12px 40px rgba(0,0,0,.18);transform:translateY(110%);transition:transform .38s cubic-bezier(.22,1,.36,1)}
+.hero.sheet-on .m-sheet{transform:translateY(0)}
+.m-sheet-grip{width:38px;height:4px;border-radius:2px;background:rgba(0,0,0,.18);margin:0 auto 14px}
+.m-sheet h2{font-size:19px;font-weight:700;letter-spacing:-.5px;line-height:1.35;padding-right:40px}
+.m-sheet .meta{margin-top:6px;font-size:12.5px;color:#8a8d91;line-height:1.5}
+.m-sheet .body{margin-top:12px;font-size:13.5px;line-height:1.75;color:#3c3f42}
+.m-sheet .body p{margin-bottom:8px}
+.m-sheet-close{position:absolute;top:14px;right:16px;width:32px;height:32px;border-radius:50%;border:none;background:#efefef;font-size:15px;color:#555;display:flex;align-items:center;justify-content:center}
+
+/* ===== 作品列表 ===== */
+.works{padding:56px 20px 20px;background:#f4f4f2}
+.works-head{margin-bottom:26px}
+.works-head .kicker{font-size:12px;font-weight:700;letter-spacing:3px;color:#9aa300}
+.works-head h2{margin-top:8px;font-size:30px;font-weight:800;letter-spacing:-1.5px;color:#1c1e21}
+.work-card{display:block;width:100%;border:none;background:#fff;border-radius:20px;padding:18px;margin-bottom:18px;box-shadow:0 6px 22px rgba(0,0,0,.06);text-align:left;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
+.work-card:active{transform:scale(.975)}
+.work-cover{width:100%;height:190px;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.work-cover img{max-width:78%;max-height:100%;object-fit:contain}
+.work-card h3{font-size:17px;font-weight:700;letter-spacing:-.4px;color:#1c1e21;line-height:1.4}
+.work-card .sub{margin-top:5px;font-size:12.5px;color:#9a9d9f;line-height:1.5}
+.work-card .open{margin-top:12px;display:inline-block;font-size:12.5px;font-weight:700;color:#7a8200;background:var(--lime);border-radius:16px;padding:6px 14px}
+
+/* ===== 联系 ===== */
+.contact{background:#14171a;color:#e8e8e6;padding:54px 24px calc(env(safe-area-inset-bottom) + 40px);text-align:center}
+.contact h2{font-size:26px;font-weight:800;letter-spacing:-1px;color:var(--lime)}
+.contact .gx{margin-top:8px;font-size:14px;color:rgba(255,255,255,.5);letter-spacing:2px}
+.contact .lines{margin-top:26px;font-size:14.5px;line-height:2.1;color:rgba(255,255,255,.85)}
+.contact .pc-hint{margin-top:30px;font-size:11.5px;color:rgba(255,255,255,.35);line-height:1.7}
+.contact .pc-hint a{color:rgba(255,255,255,.55)}
+
+/* ===== PDF 弹窗 ===== */
+.pdf-backdrop{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(20,20,24,.5);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);opacity:0;pointer-events:none;transition:opacity .3s ease}
+.pdf-backdrop.open{opacity:1;pointer-events:auto}
+.pdf-win{position:relative;width:min(96vw,1040px);height:92dvh;background:#4b4f54;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;transform:scale(.96);transition:transform .32s cubic-bezier(.22,1,.36,1)}
+.pdf-backdrop.open .pdf-win{transform:scale(1)}
+.pdf-bar{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:center;gap:10px;padding:0 16px;height:54px;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);transition:opacity .28s ease,transform .28s ease}
+.pdf-win.idle .pdf-bar{opacity:0;transform:translateY(-12px);pointer-events:none}
+.pdf-title{font-weight:600;font-size:14px;color:#333;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pdf-ext{flex:0 0 auto;font-size:12px;font-weight:600;color:#777;border:1px solid #dcdcdc;border-radius:16px;padding:5px 10px;text-decoration:none}
+.pdf-close{flex:0 0 auto;width:32px;height:32px;border-radius:50%;border:none;background:#f0f0f0;color:#666;font-size:15px;display:flex;align-items:center;justify-content:center}
+.pdf-scroll{flex:1;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0;scrollbar-width:none;-ms-overflow-style:none}
+.pdf-scroll::-webkit-scrollbar{width:0;height:0;display:none}
+.pdf-page{flex:none;width:100%;background:#fff;overflow:hidden}
+.pdf-page canvas{display:block;width:100%;height:auto}
+.pdf-loading{margin:auto;color:rgba(255,255,255,.85);font-size:14px}
+.pdf-fallback{flex:1;width:100%;border:0;background:#fff}
+</style>
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/three-addons/"}}</script>
+</head>
+<body>
+
+<section class="hero" id="hero">
+  <canvas id="stage3d"></canvas>
+  <div class="m-topbar">
+    <div class="m-logo">gongxun</div>
+    <div class="m-topnav"><a href="#works">项目</a><a href="#contact">联系</a></div>
+  </div>
+  <div class="m-hint">手指拖动旋转藤蔓 · 点按路牌查看详情</div>
+  <div class="m-hero-title">
+    <h1>把想法做得<br>更清晰，也更有趣</h1>
+    <p>视觉设计 · 品牌设计 · AIGC 创意</p>
+  </div>
+  <a class="m-scroll-cue" href="#works" aria-label="向下浏览作品">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+  </a>
+  <div class="m-sheet" id="mSheet">
+    <div class="m-sheet-grip"></div>
+    <button class="m-sheet-close" id="mSheetClose" aria-label="关闭">✕</button>
+    <h2 id="mTitle"></h2>
+    <div class="meta" id="mMeta"></div>
+    <div class="body" id="mBody"></div>
+  </div>
+</section>
+
+<section class="works" id="works">
+  <div class="works-head">
+    <div class="kicker">KEY PROJECTS</div>
+    <h2>作品查看</h2>
+  </div>
+  <div id="workList"></div>
+</section>
+
+<section class="contact" id="contact">
+  <h2>gongxun</h2>
+  <div class="gx">VISUAL DESIGNER</div>
+  <div class="lines">
+    Tel：158-14520-369<br>
+    WeChat：ljh2749445921<br>
+    坐标北京 · 2026 届应届
+  </div>
+  <div class="pc-hint">完整交互版（3D 路牌导航）建议在电脑端访问<br><a href="portfolio.html?desktop=1">→ 桌面版作品集</a></div>
+</section>
+
+<div class="pdf-backdrop" id="pdfBackdrop">
+  <div class="pdf-win" role="dialog" aria-modal="true" aria-labelledby="pdfTitle">
+    <div class="pdf-bar">
+      <div class="pdf-title" id="pdfTitle"></div>
+      <a class="pdf-ext" id="pdfExt" href="#" target="_blank" rel="noopener">新窗口</a>
+      <button class="pdf-close" id="pdfClose" aria-label="关闭">✕</button>
+    </div>
+    <div class="pdf-scroll" id="pdfScroll"></div>
+  </div>
+</div>
+
+<script type="module">
+import * as THREE from'three';
+import{OrbitControls}from'three/addons/controls/OrbitControls.js';
+
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(34,innerWidth/innerHeight,.1,100);
+camera.position.set(7,0.5,22);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,canvas:document.getElementById('stage3d')});
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));
+renderer.setSize(innerWidth,innerHeight);
+renderer.setClearColor(0x000000,0);
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+
+scene.add(new THREE.HemisphereLight(0xffffff,0xc7c9cc,2.5));
+const key=new THREE.DirectionalLight(0xffffff,3.5);key.position.set(6,10,9);scene.add(key);
+const fill=new THREE.DirectionalLight(0xdbe3ef,1.4);fill.position.set(-8,3,-7);scene.add(fill);
+const rig=new THREE.Group();scene.add(rig);
+
+const trunkMat=new THREE.MeshStandardMaterial({color:0xb9ff12,roughness:.82,metalness:0}),
+branchMat=new THREE.MeshStandardMaterial({color:0xa9ef00,roughness:.86,metalness:0}),
+thornMat=new THREE.MeshStandardMaterial({color:0xa3e900,roughness:.88,metalness:0}),
+budMat=new THREE.MeshStandardMaterial({color:0xf0b9f3,roughness:.88,metalness:0});
+
+function cylinderSeg(a,b,r,mat,radial=18){
+ const d=new THREE.Vector3().subVectors(b,a),m=new THREE.Vector3().addVectors(a,b).multiplyScalar(.5);
+ const mesh=new THREE.Mesh(new THREE.CylinderGeometry(r*.84,r,d.length(),radial),mat);
+ mesh.position.copy(m);
+ mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().normalize());
+ rig.add(mesh);return mesh;
+}
+const trunkPts=[[-.28,-5.25,.02],[-.18,-3.75,.04],[.08,-2.35,-.03],[-.15,-.9,.02],[.08,.55,-.02],[-.12,2,.03],[.1,3.5,-.02],[.3,5.15,.02]].map(p=>new THREE.Vector3(...p));
+for(let i=0;i<trunkPts.length-1;i++)cylinderSeg(trunkPts[i],trunkPts[i+1],.145-i*.007,trunkMat,22);
+function trunkX(y){for(let i=0;i<trunkPts.length-1;i++){const a=trunkPts[i],b=trunkPts[i+1];if(y>=a.y&&y<=b.y)return THREE.MathUtils.lerp(a.x,b.x,(y-a.y)/(b.y-a.y));}return 0;}
+[-4.72,-3.48,-2.12,-.72,.62,1.78,3.08,4.28].forEach((y,i)=>{
+ const an=i*2.37+.42,rad=new THREE.Vector3(Math.cos(an),0,Math.sin(an));
+ const base=new THREE.Vector3(trunkX(y),y,0).addScaledVector(rad,.11);
+ const tip=base.clone().addScaledVector(rad,.38);tip.y+=i%2?.07:.12;
+ const d=new THREE.Vector3().subVectors(tip,base);
+ const th=new THREE.Mesh(new THREE.ConeGeometry(.075,d.length(),5),thornMat);
+ th.position.addVectors(base,tip).multiplyScalar(.5);
+ th.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());
+ rig.add(th);
+});
+
+const leaves=[
+ {y:4.88,a:2.98,w:1.02,h:1.02,type:'circle',tilt:.13,roll:-.08,ci:1,side:-1},
+ {y:3.98,a:-.08,w:1.03,h:.98,type:'round',map:'mint',tilt:-.14,roll:.1,ci:0,side:1},
+ {y:2.92,a:1.18,w:2.2,h:1.34,type:'round',map:'orange-card',tilt:.2,roll:-.17,bud:1,ci:2,side:1},
+ {y:2.30,a:3.48,w:2.46,h:1.56,type:'greenleaf',tilt:-.19,roll:.14,ci:3,side:-1},
+ {y:1.18,a:-.38,w:3.3,h:2.07,type:'rabbit',map:'rabbit',tilt:.15,roll:-.09,bud:1,ci:4,side:1},
+ {y:-.12,a:2.38,w:3.05,h:2.07,type:'bluepoly',tilt:-.17,roll:.12,bud:1,ci:5,side:-1},
+ {y:-1.52,a:1.08,w:1.72,h:1.72,type:'circle',map:'fire',tilt:.16,roll:-.07,bud:1,ci:7,side:1},
+ {y:-2.92,a:3.08,w:1.02,h:1.02,type:'circle',map:'minus',tilt:-.14,roll:.09,ci:8,side:-1},
+ {y:-4.28,a:-.62,w:1.52,h:1.1,type:'arrowpoly',tilt:.18,roll:.16,ci:6,side:1}
+];
+const panelColors=[0xfff78e,0xcfffd4,0xffffff,0xb3e900,0xffb820,0x6ed8ff,0xffc7e1,0x7e61ff,0x5faafe];
+
+const details=[
+ {t:'关于我 / 视觉设计师',m:'2026 届应届 ｜ 坐标北京',b:[
+  '以 3D 路标串联整个作品集导航，拖动藤蔓可以旋转，点击路牌查看对应板块',
+  '方向覆盖视觉设计、品牌设计与 AIGC 创意生产，跟着路标依次探索']},
+ {t:'导航 / 点击路牌聚焦',m:'拖动水平旋转 ｜ 点按查看详情',b:[
+  '点按任意路牌：镜头推近聚焦，底部展开文字介绍',
+  '继续点按其他路牌可直接切换详情内容',
+  '点按空白处或 ✕ 退出详情，返回全景视图']},
+ {t:'美团大众点评 / 品牌营销设计师 / 实习',m:'2025.03 – 2025.05 ｜ 落地项目 20+',b:[
+  '主导整合营销视觉设计：洞察"携宠出游"趋势，独立负责主视觉 KV、线上活动页及线下《住玩攻略》地图等全链路物料，传递"宠物友好"品牌形象；活动 UV-CTR 达 0.72%',
+  '负责多场景营销玩法页面：针对"流量分散"痛点设计"收集贴纸"激励玩法，引导跨品类参与',
+  '参与 5 个活动头图动效设计，以动态视觉提升点击率']},
+ {t:'BRAND MARKETING / 品牌营销',m:'品牌设计 ｜ 2024 – 2026',b:[
+  '品牌 VI 系统：标志、色彩、字体与应用规范搭建',
+  '包装设计：结构、材质与印刷工艺全程跟进',
+  'IP 形象与周边：从角色设定到实物打样落地']},
+ {t:'美团 / 品牌创意设计师 / 实习',m:'2025.06 – 2025.08 ｜ 落地项目 20+',b:[
+  '主导 2025 教师节全案视觉「点亮成长，聚光同行」，"知识隧道"创意策略，AIGC 工具 2 天产出 3 版 KV 一次性通过，完成 30+ 物料延展',
+  '驱动 AIGC 设计流程革新：日均输出 10+ 差异化提案，设计可复用 AI 模板赋能非设计人员',
+  '主导 MVP 文化贴纸、袋鼠捏捏乐包装等文化实体产品，参与"青山公益" Lora 模型视觉']},
+ {t:'美团 / 品牌创意设计师 / 实习',m:'2025.06 – 2025.08 ｜ 落地项目 20+',b:[
+  '主导教师节「点亮成长，聚光同行」活动设计，完成 30+ 项物料延展',
+  'AIGC 核心应用者：可复用 AI 模板设计，降低项目成本',
+  '文化贴纸、捏捏乐包装等实体产品全程跟进印刷与品控']},
+ {t:'PROJECTS / 项目实践',m:'项目经历 ｜ 2023 – 2026',b:[
+  '校园与公益项目：用设计解决真实的传播问题',
+  '跨界协作：与插画、摄影、开发团队联合创作',
+  '设计竞赛：多项竞赛入围与获奖经历']},
+ {t:'网易雷火工作室 / 品牌营销设计师 / 实习',m:'2024.06 – 2024.11 ｜ 落地项目 30+',b:[
+  '对接《永劫无间》《倩女幽魂》等游戏 IP，独立完成角色宣传卡、预热海报、短视频片头、线下展架等物料',
+  '按"IP+物料类型"归档 200+ 视觉素材，搭建团队素材库，效率提升 30%',
+  '主导《永劫无间》CP30 周边设计，获玩家社群高频转发']},
+ {t:'能力矩阵 / SKILLS',m:'工具与方法',b:[
+  '平面设计：Photoshop / Illustrator / Figma',
+  '三维与动效：Blender / Three.js / C4D 基础',
+  'AI 工具：Midjourney / 即梦 / AIGC 视频',
+  '设计方法：品牌策略 / 视觉传达 / 印刷工艺']}
+];
+
+function panelShape(type,w,h,g=0){
+ const s=new THREE.Shape(),W=w/2+g,H=h/2+g;
+ if(type==='circle'){s.absarc(0,0,W,0,Math.PI*2);return s;}
+ if(type==='round'){const r=Math.min(W,H)*.18;s.moveTo(-W+r,-H);s.lineTo(W-r,-H);s.quadraticCurveTo(W,-H,W,-H+r);s.lineTo(W,H-r);s.quadraticCurveTo(W,H,W-r,H);s.lineTo(-W+r,H);s.quadraticCurveTo(-W,H,-W,H-r);s.lineTo(-W,-H+r);s.quadraticCurveTo(-W,-H,-W+r,-H);s.closePath();return s;}
+ let pts=[[-1,0],[-.66,-.76],[0,-1],[.66,-.76],[1,0],[.66,.76],[0,1],[-.66,.76]];
+ if(type==='greenleaf'||type==='arrowpoly')pts=[[-1,0],[-.56,-1],[.56,-1],[1,0],[.56,1],[-.56,1]];
+ pts.forEach((p,i)=>{const x=p[0]*W,y=p[1]*H;i?s.lineTo(x,y):s.moveTo(x,y);});
+ s.closePath();return s;
+}
+function panelGeo(type,w,h,g=0){return new THREE.ShapeGeometry(panelShape(type,w,h,g),48);}
+function setUV(g,w,h){const p=g.attributes.position,u=g.attributes.uv;for(let i=0;i<p.count;i++)u.setXY(i,p.getX(i)/w+.5,p.getY(i)/h+.5);u.needsUpdate=true;return g;}
+
+const mapLoader=new THREE.TextureLoader(),maps={};
+['mint','orange-card','rabbit','fire','minus','arrow-g','capcut-logo','shapes-symbols'].forEach(n=>{
+ const t=mapLoader.load('images/vine/'+n+'.png');
+ t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;maps[n]=t;
+});
+
+function barBetween(a,b,r1,r2,mat){
+ const v=new THREE.Vector3().subVectors(b,a),l=v.length();
+ const m=new THREE.Mesh(new THREE.CylinderGeometry(r2,r1,l,10),mat);
+ m.position.copy(a).addScaledVector(v,.5);
+ m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),v.clone().normalize());
+ return m;
+}
+const clickables=[],armList=[];
+leaves.forEach((s,i)=>{
+ const col=panelColors[i];
+ const arm=new THREE.Group();
+ arm.position.set(trunkX(s.y),s.y,0);
+ arm.rotation.y=-s.a;
+ arm.userData.baseRotY=-s.a;
+ rig.add(arm);armList.push(arm);
+ const reach=new THREE.Group();arm.add(reach);arm.userData.reach=reach;
+ const lx=s.w*.5+.045,ly=s.roll*.28;
+ reach.add(barBetween(new THREE.Vector3(0,0,0),new THREE.Vector3(lx,ly,0),.075,.05,branchMat));
+ const leaf=new THREE.Group();
+ leaf.position.set(lx,ly,0);
+ leaf.rotation.set(s.tilt,0,s.roll);
+ leaf.userData.baseZ=0;
+ reach.add(leaf);
+ const bodyGeo=new THREE.ExtrudeGeometry(panelShape(s.type,s.w,s.h),{depth:.13,bevelEnabled:true,bevelSize:.014,bevelThickness:.014,bevelSegments:3,curveSegments:48});
+ bodyGeo.center();
+ const body=new THREE.Mesh(bodyGeo,new THREE.MeshStandardMaterial({color:col,roughness:.9,metalness:0}));
+ leaf.add(body);
+ const fg=setUV(panelGeo(s.type,s.w,s.h),s.w,s.h);
+ const front=new THREE.Mesh(fg,new THREE.MeshStandardMaterial(s.map?{map:maps[s.map],color:0xffffff,transparent:true,alphaTest:.01,roughness:.94,metalness:0}:{color:col,roughness:.94,metalness:0}));
+ front.position.z=.084;leaf.add(front);
+ if(s.type==='greenleaf'){
+  const symMat=new THREE.MeshStandardMaterial({map:maps['shapes-symbols'],color:0xffffff,transparent:true,alphaTest:.01,roughness:.94,metalness:0});
+  const sym=new THREE.Mesh(new THREE.PlaneGeometry(2.06,.79),symMat);
+  sym.position.z=.088;leaf.add(sym);
+  sym.userData.sign=leaf;sym.userData.idx=i;clickables.push(sym);
+  const symB=new THREE.Mesh(new THREE.PlaneGeometry(2.06,.79),symMat);
+  symB.position.z=-.088;symB.rotation.y=Math.PI;leaf.add(symB);
+  symB.userData.sign=leaf;symB.userData.idx=i;clickables.push(symB);
+ }
+ if(s.type==='bluepoly'){
+  const logoMat=new THREE.MeshStandardMaterial({map:maps['capcut-logo'],color:0xffffff,transparent:true,alphaTest:.01,roughness:.94,metalness:0});
+  const logo=new THREE.Mesh(new THREE.PlaneGeometry(1.55,1.21),logoMat);
+  logo.position.z=.088;leaf.add(logo);
+  logo.userData.sign=leaf;logo.userData.idx=i;clickables.push(logo);
+  const logoB=new THREE.Mesh(new THREE.PlaneGeometry(1.55,1.21),logoMat);
+  logoB.position.z=-.088;logoB.rotation.y=Math.PI;leaf.add(logoB);
+  logoB.userData.sign=leaf;logoB.userData.idx=i;clickables.push(logoB);
+ }
+ if(s.type==='arrowpoly'){
+  const arMat=new THREE.MeshStandardMaterial({map:maps['arrow-g'],color:0xffffff,transparent:true,alphaTest:.01,roughness:.94,metalness:0});
+  const ar=new THREE.Mesh(new THREE.PlaneGeometry(s.w,s.h),arMat);
+  ar.position.z=.088;ar.rotation.z=-.386;leaf.add(ar);
+  ar.userData.sign=leaf;ar.userData.idx=i;clickables.push(ar);
+  const arB=new THREE.Mesh(new THREE.PlaneGeometry(s.w,s.h),arMat);
+  arB.position.z=-.088;arB.rotation.set(0,Math.PI,Math.PI-.386);leaf.add(arB);
+  arB.userData.sign=leaf;arB.userData.idx=i;clickables.push(arB);
+ }
+ const rear=new THREE.Mesh(fg,new THREE.MeshStandardMaterial(s.map?{map:maps[s.map],color:0xffffff,transparent:true,alphaTest:.01,roughness:.94,metalness:0}:{color:col,roughness:.95,metalness:0}));
+ rear.position.z=-.084;rear.rotation.y=Math.PI;leaf.add(rear);
+ [body,front,rear].forEach(o=>{o.userData.sign=leaf;o.userData.idx=i;clickables.push(o);});
+ if(s.bud){
+  const bud=new THREE.Mesh(new THREE.SphereGeometry(.12,20,16),budMat);
+  bud.position.set(s.w+.185,ly,0);
+  reach.add(bud);
+ }
+});
+
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;controls.enablePan=false;
+controls.target.set(0,.22,0);
+controls.minDistance=10;controls.maxDistance=34;
+controls.minPolarAngle=controls.maxPolarAngle=Math.PI/2;
+controls.autoRotate=true;controls.autoRotateSpeed=.7;
+controls.update();
+renderer.domElement.addEventListener('pointerdown',()=>{controls.autoRotate=false;});
+
+/* ===== 点按路牌 → 底部弹层 ===== */
+const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
+let down={x:0,y:0},focus=null,anim=null,saved=null,mode='idle',popObj=null;
+const hero=document.getElementById('hero'),mSheet=document.getElementById('mSheet'),
+      mTitle=document.getElementById('mTitle'),mMeta=document.getElementById('mMeta'),mBody=document.getElementById('mBody');
+const ease=t=>1-Math.pow(1-t,3);
+const state=()=>({cam:camera.position.clone(),target:controls.target.clone(),rig:rig.position.clone()});
+function tween(to,done){const from=state(),start=performance.now(),pop=popObj,pz=pop?pop.obj.position.z:0;anim={step(now){const t=Math.min(1,(now-start)/850),e=ease(t);camera.position.lerpVectors(from.cam,to.cam,e);controls.target.lerpVectors(from.target,to.target,e);rig.position.lerpVectors(from.rig,to.rig,e);if(pop)pop.obj.position.z=pz+(pop.tz-pz)*e;camera.lookAt(controls.target);if(t===1){anim=null;done?.();needsRender=true;}}};needsRender=true;}
+function signFrame(sign,dist,rightShift,targetShift){
+ const center=new THREE.Vector3();sign.getWorldPosition(center);
+ const normal=new THREE.Vector3(0,0,1).applyQuaternion(sign.getWorldQuaternion(new THREE.Quaternion())).normalize();
+ const right=new THREE.Vector3().crossVectors(normal,camera.up).negate().normalize();
+ const cam=center.clone().addScaledVector(normal,dist).addScaledVector(right,rightShift);
+ cam.y=center.y+0.05;
+ const target=center.clone().addScaledVector(right,targetShift);
+ return{cam,target};
+}
+function fillSheet(idx){
+ const d=details[idx]||details[0];
+ mTitle.textContent=d.t;mMeta.textContent=d.m;
+ mBody.innerHTML=d.b.map(x=>`<p>• ${x}</p>`).join('');
+}
+function enterDetail(idx,sign){
+ if(mode==='idle')saved=state();
+ if(popObj&&popObj.obj!==sign){popObj.obj.position.z=popObj.obj.userData.baseZ??0;popObj=null;}
+ focus=sign;mode='detail';controls.enabled=false;
+ fillSheet(leaves[idx].ci);
+ hero.classList.add('sheet-on');
+ popObj={obj:sign,tz:(sign.userData.baseZ??0)+.8};
+ const dir=leaves[idx].side<0?-1:1;
+ const{cam,target}=signFrame(sign,dir<0?5.35:4.9,(dir<0?0.32:0.55)*dir,(dir<0?0.95:1.3)*dir);
+ tween({cam,target,rig:rig.position.clone()});
+}
+function restore(){
+ if(!focus||!saved)return;
+ const to=saved,back=focus;
+ popObj={obj:back,tz:back.userData.baseZ??0};focus=null;mode='idle';
+ hero.classList.remove('sheet-on');
+ tween(to,()=>{controls.enabled=true;controls.update();saved=null;popObj=null;});
+}
+function pickAt(cx,cy){
+ pointer.x=cx/innerWidth*2-1;pointer.y=-(cy/innerHeight)*2+1;
+ raycaster.setFromCamera(pointer,camera);
+ return raycaster.intersectObjects(clickables,false)[0];
+}
+document.getElementById('mSheetClose').addEventListener('click',e=>{e.stopPropagation();restore();});
+renderer.domElement.addEventListener('pointerdown',e=>down={x:e.clientX,y:e.clientY});
+renderer.domElement.addEventListener('pointerup',e=>{
+ if(Math.hypot(e.clientX-down.x,e.clientY-down.y)>8||anim)return;
+ const hit=pickAt(e.clientX,e.clientY);
+ if(hit)enterDetail(hit.object.userData.idx,hit.object.userData.sign);
+ else if(mode==='detail')restore();
+});
+
+/* ===== 作品列表 → PDF ===== */
+const WORKS=[
+ {img:'images/figma-home/flowers/dog.png',bg:'#fff3b0',title:'大众点评 · 宠物试睡官活动长图设计',sub:'品牌营销视觉 · 主视觉 KV / 活动页 / 线下攻略地图',pdf:'pet-sleeper.pdf'},
+ {img:'images/figma-home/flowers/mandi.png',bg:'#d9f7c8',title:'Māndi 公交盲盒 APP · UI 设计',sub:'IU 设计作品 · 公交社交盲盒概念产品',pdf:'mandi.pdf'},
+ {img:'images/figma-home/flowers/teacher.png',bg:'#ffe9b0',title:'美团 · 教师节活动设计',sub:'「点亮成长，聚光同行」全案视觉 · 30+ 物料延展',pdf:'teachers-day.pdf'},
+ {img:'images/figma-home/flowers/ip-circle.png',bg:'#e8f4c0',title:'巫山十巫 · 数字 IP 文创设计',sub:'WUSHAN WIZARDS · IP 形象与文创衍生',pdf:'wushan-wizards.pdf'},
+ {img:'images/figma-home/flowers/star.png',bg:'#fff0b8',title:'YUMMY 巧克力情感化包装设计',sub:'其他设计作品 · 包装结构与情感化表达',pdf:'yummy.pdf'}
+];
+const workList=document.getElementById('workList');
+WORKS.forEach(w=>{
+ const btn=document.createElement('button');
+ btn.className='work-card';
+ btn.innerHTML=`<div class="work-cover" style="background:${w.bg}"><img src="${w.img}" alt="" loading="lazy" decoding="async"></div>
+   <h3>${w.title}</h3><div class="sub">${w.sub}</div><span class="open">查看作品 PDF ↗</span>`;
+ btn.addEventListener('click',()=>openPdf(w.pdf,w.title));
+ workList.appendChild(btn);
+});
+
+/* ===== PDF.js 查看器（与桌面版同源） ===== */
+const pdfBackdrop=document.getElementById('pdfBackdrop'),pdfScroll=document.getElementById('pdfScroll'),
+      pdfWin=pdfBackdrop.querySelector('.pdf-win'),
+      pdfTitle=document.getElementById('pdfTitle'),pdfExt=document.getElementById('pdfExt');
+let pdfToken=0,idleTimer=null;const pdfDocs={};
+function wakeBar(){pdfWin.classList.remove('idle');clearTimeout(idleTimer);idleTimer=setTimeout(()=>pdfWin.classList.add('idle'),1800);}
+pdfWin.addEventListener('pointerdown',wakeBar);
+function openPdf(file,title){
+ const token=++pdfToken;
+ pdfTitle.textContent=title||file;
+ pdfExt.href='pdfs/'+file;
+ pdfBackdrop.classList.add('open');
+ document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';
+ pdfWin.classList.remove('idle');wakeBar();
+ showPdf(file,token);
+}
+function closePdf(){
+ pdfBackdrop.classList.remove('open');
+ document.documentElement.style.overflow='';document.body.style.overflow='';
+ pdfWin.classList.remove('idle');clearTimeout(idleTimer);
+ pdfToken++;
+ setTimeout(()=>{if(!pdfBackdrop.classList.contains('open'))pdfScroll.innerHTML='';},300);
+}
+document.getElementById('pdfClose').addEventListener('click',closePdf);
+pdfBackdrop.addEventListener('click',e=>{if(e.target===pdfBackdrop)closePdf();});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&pdfBackdrop.classList.contains('open'))closePdf();});
+let pdfJsPromise=null;
+function loadPdfJs(){
+ if(window.pdfjsLib)return Promise.resolve(window.pdfjsLib);
+ if(pdfJsPromise)return pdfJsPromise;
+ pdfJsPromise=new Promise((res,rej)=>{
+  const s=document.createElement('script');
+  s.src='vendor/pdf.min.js';
+  s.onload=()=>{window.pdfjsLib.GlobalWorkerOptions.workerSrc='vendor/pdf.worker.min.js';res(window.pdfjsLib);};
+  s.onerror=rej;
+  document.head.appendChild(s);
+ });
+ return pdfJsPromise;
+}
+async function showPdf(file,token){
+ pdfScroll.innerHTML='<div class="pdf-loading">作品加载中…</div>';
+ try{
+  const pdfjs=await loadPdfJs();
+  if(token!==pdfToken)return;
+  let doc=pdfDocs[file];
+  if(!doc){
+   const buf=await (await fetch('pdfs/'+file)).arrayBuffer();
+   if(token!==pdfToken)return;
+   doc=await pdfjs.getDocument({data:buf,disableRange:true,disableStream:true}).promise;
+   pdfDocs[file]=doc;
+  }
+  if(token!==pdfToken)return;
+  pdfScroll.innerHTML='';
+  let contW=pdfScroll.clientWidth;
+  const pages=[];
+  for(let n=1;n<=doc.numPages;n++){
+   const page=await doc.getPage(n);
+   const base=page.getViewport({scale:1});
+   const el=document.createElement('div');
+   el.className='pdf-page';el.dataset.page=n;
+   el.style.width=contW+'px';
+   el.style.height=Math.round(contW*base.height/base.width)+'px';
+   pdfScroll.appendChild(el);
+   pages.push({el,page,base});
+  }
+  const contW2=pdfScroll.clientWidth;
+  if(contW2&&contW2!==contW){
+   contW=contW2;
+   pages.forEach(({el,base})=>{el.style.width=contW+'px';el.style.height=Math.round(contW*base.height/base.width)+'px';});
+  }
+  pdfScroll.scrollTop=0;
+  const dpr=Math.min(devicePixelRatio||1,2);
+  const io=new IntersectionObserver(es=>{
+   es.forEach(async en=>{
+    if(!en.isIntersecting)return;
+    const p=en.target._p;if(!p||p.el.querySelector('canvas'))return;
+    const vp=p.page.getViewport({scale:contW/p.base.width*dpr});
+    const c=document.createElement('canvas');
+    c.width=vp.width;c.height=vp.height;
+    p.el.style.height='auto';
+    p.el.appendChild(c);
+    try{await p.page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;}catch(e){}
+   });
+  },{root:pdfScroll,rootMargin:'600px 0px'});
+  pages.forEach(p=>{p.el._p=p;io.observe(p.el);});
+ }catch(err){
+  if(token!==pdfToken)return;
+  pdfScroll.innerHTML='<iframe class="pdf-fallback" src="pdfs/'+file+'"></iframe>';
+ }
+}
+
+/* ===== 渲染循环（按需） ===== */
+let needsRender=true;
+controls.addEventListener('change',()=>needsRender=true);
+addEventListener('resize',()=>{
+ camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
+ renderer.setSize(innerWidth,innerHeight);needsRender=true;
+});
+function loop(now){
+ requestAnimationFrame(loop);
+ if(anim){anim.step(now);needsRender=true;}else controls.update();
+ if(needsRender){renderer.render(scene,camera);needsRender=false;}
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
