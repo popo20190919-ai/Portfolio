@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<script>(function(){var m=/Android|iPhone|iPad|iPod|Mobile|HarmonyOS|MIUI/i.test(navigator.userAgent);var off=/[?&]desktop=1/.test(location.search);if(off){try{sessionStorage.setItem('desktop_site','1')}catch(e){}}var keep=false;try{keep=sessionStorage.getItem('desktop_site')==='1'}catch(e){}if(m&&!off&&!keep){location.replace('mobile.html')}})();</script>
 <title>gongxun · PORTFOLIO</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,29 +36,29 @@ body.detail-on .detail-panel{opacity:1;transform:none}
 .lower{position:relative;width:100%;overflow:hidden;background:#fff}
 .lower-inner{position:absolute;left:50%;top:0;width:1920px;height:5558px;transform:translateX(-50%);transform-origin:top center}
 .lower-inner img{position:absolute;display:block;user-select:none;-webkit-user-drag:none}
-.sec1{top:0;left:-3px;width:1920px}
-.sec2{top:1821px;left:-14px;width:1941px}
-.grass{top:3950px;left:-61px;width:2107px}
+.sec1{top:0;left:-3px;width:1920px;height:2394px}
+.sec2{top:1821px;left:-14px;width:1941px;height:1552px}
+.grass{top:3950px;left:-61px;width:2107px;height:999px}
 .wcard{position:absolute;top:4433px;width:313px;height:427px;background:#f5f5f5;border-radius:27.5px}
 .wc1{left:79px}.wc2{left:439px}.wc3{left:799px}.wc4{left:1159px}.wc5{left:1519px}
-.wcard .f1{left:41px;top:39px;width:229px}
-.wcard .f2a{left:41px;top:39px;width:229px}
-.wcard .f2b{left:48px;top:46px;width:215px}
-.wcard .f3b{left:44px;top:43px;width:225px}
-.wcard .f3a{left:44px;top:32px;width:229px}
+.wcard .f1{left:41px;top:39px;width:229px;height:229px}
+.wcard .f2a{left:41px;top:39px;width:229px;height:229px}
+.wcard .f2b{left:48px;top:46px;width:215px;height:215px}
+.wcard .f3b{left:44px;top:43px;width:225px;height:225px}
+.wcard .f3a{left:44px;top:32px;width:229px;height:229px}
 .wcard .f4{left:37px;top:39px;width:238px;height:228px}
-.wcard .f5a{left:44px;top:43px;width:225px}
-.wcard .f5b{left:55px;top:55px;width:202px}
+.wcard .f5a{left:44px;top:43px;width:225px;height:225px}
+.wcard .f5b{left:55px;top:55px;width:202px;height:202px}
 .wc-title{position:absolute;left:34px;top:307px;font-weight:600;font-size:31.8px;line-height:33px;letter-spacing:-7.3px;color:#737373;white-space:nowrap}
 .wc-desc{position:absolute;left:34px;top:351px;width:244px;font-weight:300;font-size:19.8px;line-height:20.5px;letter-spacing:-4.5px;color:#606060}
 .foot{position:absolute;left:-31px;top:5144px;width:1982px;height:693px;overflow:hidden}
-.foot>img{left:0;top:0;width:1982px}
+.foot>img{left:0;top:0;width:1982px;height:693px}
 .foot-gx{position:absolute;left:110px;top:75px;font-family:'Nanum Pen Script',cursive;font-weight:400;font-size:94.5px;line-height:109px;letter-spacing:-8.5px;color:#F8FF3A}
 .foot-contact{position:absolute;left:1555px;top:104px;width:306px;font-weight:400;font-size:24.3px;line-height:36.8px;letter-spacing:-2.2px;color:#F8FF3A;white-space:pre-line;text-align:left}
 .foot-email{position:absolute;left:110px;top:130px;font-weight:400;font-size:144.8px;line-height:218.7px;letter-spacing:-13px;color:#F8FF3A;white-space:nowrap}
 .collage-blank{position:absolute;left:-80px;top:302px;width:2080px;height:784px;background:#fff;z-index:2}
 .piece-wrap{position:absolute;left:0;top:0;z-index:3;will-change:transform;pointer-events:auto;-webkit-user-drag:none}
-.piece{position:absolute;left:0;top:0;width:100%;pointer-events:none;-webkit-user-drag:none;user-select:none}
+.piece{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;-webkit-user-drag:none;user-select:none}
 .pc-gray{filter:grayscale(1)}
 .pc-color{opacity:0;transition:opacity .35s ease}
 .piece-wrap:hover .pc-color{opacity:1}
@@ -149,9 +148,9 @@ html.pdf-lock,body.pdf-lock{overflow:hidden}
 </div>
 <main class="lower" id="lower">
 <div class="lower-inner" id="lowerInner">
-  <img class="sec1" src="images/figma-home/lower-sec1.png" alt="" loading="lazy" decoding="async">
-  <img class="sec2" src="images/figma-home/lower-sec2.png" alt="" loading="lazy" decoding="async">
-  <img class="grass" src="images/figma-home/lower-grass.png" alt="" loading="lazy" decoding="async">
+  <img class="sec1" data-src="images/figma-home/lower-sec1.png" alt="" loading="lazy" decoding="async">
+  <img class="sec2" data-src="images/figma-home/lower-sec2.png" alt="" loading="lazy" decoding="async">
+  <img class="grass" data-src="images/figma-home/lower-grass.png" alt="" loading="lazy" decoding="async">
   <div class="collage-blank"></div>
   <div id="pieceLayer"></div>
   <div class="scene-blank"></div>
@@ -160,7 +159,7 @@ html.pdf-lock,body.pdf-lock{overflow:hidden}
   <div id="flowerMask"></div>
   <div id="flowerLayer"></div>
   <div class="garden-blank"></div>
-  <img class="garden-base" src="images/figma-home/garden-base.png?v=20260901b" alt="" loading="lazy" decoding="async">
+  <img class="garden-base" data-src="images/figma-home/garden-base.png?v=20260901b" alt="" loading="lazy" decoding="async">
   <div class="garden-title">🔑Key Projects</div>
   <svg id="gardenSvg" viewBox="0 0 1920 5558" xmlns="http://www.w3.org/2000/svg">
     <g stroke="#b5b5b5" stroke-width="2" fill="none">
@@ -187,8 +186,8 @@ html.pdf-lock,body.pdf-lock{overflow:hidden}
   <div class="garden-label" style="left:1232px;top:2236px;width:203px"><div class="zh">其他设计作品</div><div class="en">Internship design work</div></div>
   <div class="garden-label" style="left:1534px;top:2386px;width:148px"><div class="zh">IP设计作品</div><div class="en">IP Design Works</div></div>
   <div class="vibe-blank"></div>
-  <img class="vibe-shot" src="images/figma-home/vibe-studio.png" style="left:181px;top:3332px;width:741px;height:383px" alt="人物造型生成网站工作台" loading="lazy" decoding="async">
-  <img class="vibe-shot" src="images/figma-home/vibe-poster.png" style="left:988px;top:3332px;width:743px;height:383px" alt="海报模板工坊" loading="lazy" decoding="async">
+  <img class="vibe-shot" data-src="images/figma-home/vibe-studio.png" style="left:181px;top:3332px;width:741px;height:383px" alt="人物造型生成网站工作台" loading="lazy" decoding="async">
+  <img class="vibe-shot" data-src="images/figma-home/vibe-poster.png" style="left:988px;top:3332px;width:743px;height:383px" alt="海报模板工坊" loading="lazy" decoding="async">
   <div class="vibe-title">Vibecoding project</div>
   <div class="vibe-pill" style="left:351px;top:3744px;width:311px">人物造型生成网站</div>
   <div class="vibe-pill" style="left:1140px;top:3744px;width:311px">人物造型生成网站</div>
@@ -200,35 +199,35 @@ html.pdf-lock,body.pdf-lock{overflow:hidden}
   <div class="what-emoji">😆</div>
   <div class="what-cn">把想法做得<br>更清晰,也更有趣。</div>
   <div class="wcard wc1">
-    <img class="f1" src="images/figma-home/flower1.png" alt="" loading="lazy" decoding="async">
+    <img class="f1" data-src="images/figma-home/flower1.png" alt="" loading="lazy" decoding="async">
     <div class="wc-title">品牌策略与视觉</div>
     <div class="wc-desc">从策略、概念到完整视觉系统,让品牌拥有清晰而长期的表达。</div>
   </div>
   <div class="wcard wc2">
-    <img class="f2a" src="images/figma-home/flower2-bg.png" alt="" loading="lazy" decoding="async">
-    <img class="f2b" src="images/figma-home/flower2-fg.png" alt="" loading="lazy" decoding="async">
+    <img class="f2a" data-src="images/figma-home/flower2-bg.png" alt="" loading="lazy" decoding="async">
+    <img class="f2b" data-src="images/figma-home/flower2-fg.png" alt="" loading="lazy" decoding="async">
     <div class="wc-title">AI创意与制作</div>
     <div class="wc-desc">将生成式AI融入创意流程,快速探索并产出高完成度视觉。</div>
   </div>
   <div class="wcard wc3">
-    <img class="f3b" src="images/figma-home/flower3-bg.png" alt="" loading="lazy" decoding="async">
-    <img class="f3a" src="images/figma-home/flower3-fg.png" alt="" loading="lazy" decoding="async">
+    <img class="f3b" data-src="images/figma-home/flower3-bg.png" alt="" loading="lazy" decoding="async">
+    <img class="f3a" data-src="images/figma-home/flower3-fg.png" alt="" loading="lazy" decoding="async">
     <div class="wc-title">跨媒介设计</div>
     <div class="wc-desc">覆盖品牌、数字产品、动态与空间,保持一致的体验与审美。</div>
   </div>
   <div class="wcard wc4">
-    <img class="f4" src="images/figma-home/flower5.png" alt="" loading="lazy" decoding="async">
+    <img class="f4" data-src="images/figma-home/flower5.png" alt="" loading="lazy" decoding="async">
     <div class="wc-title">敏捷共创</div>
     <div class="wc-desc">善于把模糊需求转化为可落地方案,在协作中持续推动项目。</div>
   </div>
   <div class="wcard wc5">
-    <img class="f5a" src="images/figma-home/flower4-bg.png" alt="" loading="lazy" decoding="async">
-    <img class="f5b" src="images/figma-home/flower4-fg.png" alt="" loading="lazy" decoding="async">
+    <img class="f5a" data-src="images/figma-home/flower4-bg.png" alt="" loading="lazy" decoding="async">
+    <img class="f5b" data-src="images/figma-home/flower4-fg.png" alt="" loading="lazy" decoding="async">
     <div class="wc-title">动态与影像</div>
     <div class="wc-desc">节奏、转场与镜头语言共同构建可被记住的动态体验。</div>
   </div>
   <footer class="foot">
-    <img src="images/figma-home/lower-footer.png" alt="" loading="lazy" decoding="async">
+    <img data-src="images/figma-home/lower-footer.png" alt="" loading="lazy" decoding="async">
     <div class="foot-gx">gongxun</div>
     <div class="foot-contact">联系我
 Tel: 158-14520-369
@@ -239,6 +238,24 @@ E-mail:2749445921@qq.com
   </footer>
 </div>
 </main>
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(en.isIntersecting){
+        var im=en.target;
+        if(im.dataset&&im.dataset.src){im.src=im.dataset.src;im.removeAttribute('data-src');}
+        io.unobserve(im);
+      }
+    });
+  },{rootMargin:'350px 0px'});
+  function reg(n){if(n&&n.nodeType===1){if(n.tagName==='IMG'&&n.dataset&&n.dataset.src)io.observe(n);if(n.querySelectorAll)n.querySelectorAll('img[data-src]').forEach(function(im){io.observe(im);});}}
+  document.querySelectorAll('img[data-src]').forEach(function(im){io.observe(im);});
+  new MutationObserver(function(muts){
+    muts.forEach(function(m){m.addedNodes&&m.addedNodes.forEach(reg);});
+  }).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
 <script type="module">
 import * as THREE from'three';
 import{OrbitControls}from'three/addons/controls/OrbitControls.js';
@@ -627,8 +644,8 @@ requestAnimationFrame(loop);
   const elds=P.map(([f,x0,y0,w,h,cf])=>{
     const wrap=document.createElement('div');
     wrap.className='piece-wrap';wrap.style.width=w+'px';wrap.style.height=h+'px';
-    const g=document.createElement('img');g.className='piece pc-gray';g.loading='lazy';g.decoding='async';g.src=DIR+f;
-    const c=document.createElement('img');c.className='piece pc-color';c.loading='lazy';c.decoding='async';c.src=DIR+(cf||f);
+    const g=document.createElement('img');g.className='piece pc-gray';g.loading='lazy';g.decoding='async';g.dataset.src=DIR+f;
+    const c=document.createElement('img');c.className='piece pc-color';c.loading='lazy';c.decoding='async';c.dataset.src=DIR+(cf||f);
     wrap.appendChild(g);wrap.appendChild(c);layer.appendChild(wrap);
     const sx=x0+(Math.random()-0.5)*120,sy=-h-250-Math.random()*500,sr=(Math.random()-0.5)*140;
     wrap.style.transform=`translate(${sx}px,${sy}px) rotate(${sr}deg)`;
@@ -682,7 +699,7 @@ requestAnimationFrame(loop);
     const im=document.createElement('img');
     im.className='scene-img'+(spin!==null?' scene-fan'+(Math.abs(spin)===70?' fan-icon':''):'');
     im.loading='lazy';im.decoding='async';
-    im.src=D+f;im.alt='';im.draggable=false;
+    im.dataset.src=D+f;im.alt='';im.draggable=false;
     im.style.left=x+'px';im.style.top=y+'px';im.style.width=w+'px';im.style.height=h+'px';im.style.zIndex=z;
     layer.appendChild(im);
     if(spin!==null){
@@ -789,7 +806,7 @@ requestAnimationFrame(loop);
     fl.parts.forEach(p=>{x0=Math.min(x0,p[1]);y0=Math.min(y0,p[2]);x1=Math.max(x1,p[1]+p[3]);y1=Math.max(y1,p[2]+p[4]);});
     const w=x1-x0,h=y1-y0;
     const mk=new Image();
-    mk.alt='';mk.loading='lazy';mk.decoding='async';mk.src=FD+'mask-'+fl.id+'.png'+FV;
+    mk.alt='';mk.loading='lazy';mk.decoding='async';mk.dataset.src=FD+'mask-'+fl.id+'.png'+FV;
     mk.style.left=x0+'px';mk.style.top=y0+'px';mk.style.width=w+'px';mk.style.height=h+'px';
     maskLayer.appendChild(mk);
     const wrap=document.createElement('div');
@@ -797,7 +814,7 @@ requestAnimationFrame(loop);
     wrap.style.left=x0+'px';wrap.style.top=y0+'px';wrap.style.width=w+'px';wrap.style.height=h+'px';wrap.style.zIndex=fl.z;
     fl.parts.forEach(([f,x,y,pw,ph],i)=>{
       const im=document.createElement('img');
-      im.alt='';im.loading='lazy';im.decoding='async';im.src=FD+f+FV;im.draggable=false;
+      im.alt='';im.loading='lazy';im.decoding='async';im.dataset.src=FD+f+FV;im.draggable=false;
       im.style.left=(x-x0)+'px';im.style.top=(y-y0)+'px';im.style.width=pw+'px';im.style.height=ph+'px';im.style.zIndex=i+1;
       wrap.appendChild(im);
     });
