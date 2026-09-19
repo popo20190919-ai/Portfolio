@@ -491,8 +491,8 @@ function enterDetail(idx,sign){
   document.body.classList.add('detail-on');
   popObj={obj:sign,tz:(sign.userData.baseZ??0)+.8};
   const{cam,target}=signFrame(sign,4.9,0.55,1.3);
-  cam.x+=3.4;
-  target.x+=3.4;
+  cam.x+=5.5;
+  target.x+=5.5;
   tween({cam,target,rig:idleState.rig.clone()});
 }
 function restore(){
