@@ -605,6 +605,7 @@ if(_sq!==null){
 }
 let scrollSyncTimer;
 addEventListener('scroll',()=>{
+  if(mode==='detail'){restore();return;}
   clearTimeout(scrollSyncTimer);
   scrollSyncTimer=setTimeout(()=>{
     if(snapLock)return;
